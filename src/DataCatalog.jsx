@@ -309,21 +309,21 @@ const DataCatalogInterface = () => {
               )}
               
               <div className="mt-6 grid grid-cols-3 gap-4">
-                <div className="bg-gray-50 p-4 rounded">
+                <div className="bg-gray-50 p-4 rounded flex flex-col items-center text-center">
                   <div className="flex items-center text-sm text-gray-500">
                     <User className="h-4 w-4 mr-2" />
                     <span>Owner</span>
                   </div>
                   <p className="mt-1 font-medium">{selectedProduct.owner}</p>
                 </div>
-                <div className="bg-gray-50 p-4 rounded">
+                <div className="bg-gray-50 p-4 rounded flex flex-col items-center text-center">
                   <div className="flex items-center text-sm text-gray-500">
                     <Clock className="h-4 w-4 mr-2" />
                     <span>Update Frequency</span>
                   </div>
-                  <p className="mt-1 items-center font-medium">{selectedProduct.updateFrequency}</p>
+                  <p className="mt-1 font-medium">{selectedProduct.updateFrequency}</p>
                 </div>
-                <div className="bg-gray-50 p-4 rounded">
+                <div className="bg-gray-50 p-4 rounded flex flex-col items-center text-center">
                   <div className="flex items-center text-sm text-gray-500">
                     <Shield className="h-4 w-4 mr-2" />
                     <span>Sensitivity</span>

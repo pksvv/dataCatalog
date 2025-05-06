@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, Database, Check, Server, FileText, Clock, Settings, Download, Copy, AlertCircle } from 'lucide-react';
+import { ArrowRight, Database, Check, Server, FileText, Clock, Settings, Download, Copy, AlertCircle, PieChart } from 'lucide-react';
 
 const TraditionalContractFlow = () => {
   // Step tracking
@@ -15,7 +15,8 @@ const TraditionalContractFlow = () => {
   const [deliveryConfig, setDeliveryConfig] = useState({
     mechanism: 'api',
     format: 'json',
-    frequency: 'daily'
+    frequency: 'daily',
+    visualizationTool: null // Added for visualization tools
   });
   
   // Step 4: Contract Summary
@@ -126,6 +127,11 @@ const TraditionalContractFlow = () => {
   
   const handlePreviousStep = () => {
     setCurrentStep(currentStep - 1);
+  };
+  
+  // Visualization tools selection
+  const handleVisToolSelect = (tool) => {
+    setDeliveryConfig({...deliveryConfig, visualizationTool: tool});
   };
   
   // Render functions for each step
@@ -310,6 +316,14 @@ const TraditionalContractFlow = () => {
   };
   
   const renderDeliveryConfiguration = () => {
+    // Visualization tools options
+    const visualizationTools = [
+      { id: 'powerbi', name: 'Power BI', description: 'Connect directly to Microsoft Power BI' },
+      { id: 'tableau', name: 'Tableau', description: 'Integrate with Tableau dashboards' },
+      { id: 'looker', name: 'Looker', description: 'Connect to Google Looker Studio' },
+      { id: 'quicksight', name: 'QuickSight', description: 'Use with Amazon QuickSight' }
+    ];
+    
     return (
       <div>
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Configure Delivery</h2>
@@ -319,10 +333,10 @@ const TraditionalContractFlow = () => {
           {/* Delivery Mechanism */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Delivery Mechanism</label>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-4 gap-4">
               <div 
                 className={`border rounded-lg p-4 cursor-pointer ${deliveryConfig.mechanism === 'api' ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-blue-300'}`}
-                onClick={() => setDeliveryConfig({...deliveryConfig, mechanism: 'api'})}
+                onClick={() => setDeliveryConfig({...deliveryConfig, mechanism: 'api', visualizationTool: null})}
               >
                 <div className="flex justify-center mb-2">
                   <Server className="h-8 w-8 text-blue-600" />
@@ -333,7 +347,7 @@ const TraditionalContractFlow = () => {
               
               <div 
                 className={`border rounded-lg p-4 cursor-pointer ${deliveryConfig.mechanism === 'sftp' ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-blue-300'}`}
-                onClick={() => setDeliveryConfig({...deliveryConfig, mechanism: 'sftp'})}
+                onClick={() => setDeliveryConfig({...deliveryConfig, mechanism: 'sftp', visualizationTool: null})}
               >
                 <div className="flex justify-center mb-2">
                   <Download className="h-8 w-8 text-blue-600" />
@@ -344,7 +358,7 @@ const TraditionalContractFlow = () => {
               
               <div 
                 className={`border rounded-lg p-4 cursor-pointer ${deliveryConfig.mechanism === 'graphql' ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-blue-300'}`}
-                onClick={() => setDeliveryConfig({...deliveryConfig, mechanism: 'graphql'})}
+                onClick={() => setDeliveryConfig({...deliveryConfig, mechanism: 'graphql', visualizationTool: null})}
               >
                 <div className="flex justify-center mb-2">
                   <svg className="h-8 w-8 text-blue-600" viewBox="0 0 400 400" fill="currentColor">
@@ -360,74 +374,134 @@ const TraditionalContractFlow = () => {
                 <h3 className="text-center font-medium">GraphQL</h3>
                 <p className="text-xs text-center text-gray-500 mt-1">Flexible querying with GraphQL schema</p>
               </div>
+              
+              {/* New Visualization Tools Button */}
+              <div 
+                className={`border rounded-lg p-4 cursor-pointer ${deliveryConfig.mechanism === 'visualization' ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-blue-300'}`}
+                onClick={() => setDeliveryConfig({...deliveryConfig, mechanism: 'visualization', visualizationTool: null})}
+              >
+                <div className="flex justify-center mb-2">
+                  <PieChart className="h-8 w-8 text-blue-600" />
+                </div>
+                <h3 className="text-center font-medium">Visualization Tools</h3>
+                <p className="text-xs text-center text-gray-500 mt-1">Direct integration with popular BI platforms</p>
+              </div>
             </div>
           </div>
           
-          {/* Format Options */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Output Format</label>
-            <div className="flex space-x-4">
-              <button 
-                className={`px-4 py-2 rounded ${deliveryConfig.format === 'json' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                onClick={() => setDeliveryConfig({...deliveryConfig, format: 'json'})}
-              >
-                JSON
-              </button>
-              <button 
-                className={`px-4 py-2 rounded ${deliveryConfig.format === 'csv' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                onClick={() => setDeliveryConfig({...deliveryConfig, format: 'csv'})}
-              >
-                CSV
-              </button>
-              <button 
-                className={`px-4 py-2 rounded ${deliveryConfig.format === 'xml' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                onClick={() => setDeliveryConfig({...deliveryConfig, format: 'xml'})}
-              >
-                XML
-              </button>
-              <button 
-                className={`px-4 py-2 rounded ${deliveryConfig.format === 'parquet' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                onClick={() => setDeliveryConfig({...deliveryConfig, format: 'parquet'})}
-              >
-                Parquet
-              </button>
+          {/* Visualization Tool Selection (only shown when visualization mechanism is selected) */}
+          {deliveryConfig.mechanism === 'visualization' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Select Visualization Tool</label>
+              <div className="grid grid-cols-2 gap-4">
+                {visualizationTools.map(tool => (
+                  <div 
+                    key={tool.id}
+                    className={`border rounded-lg p-4 cursor-pointer ${deliveryConfig.visualizationTool === tool.id ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-blue-300'}`}
+                    onClick={() => handleVisToolSelect(tool.id)}
+                  >
+                    <div className="flex justify-between items-center">
+                      <h3 className="font-medium">{tool.name}</h3>
+                      {deliveryConfig.visualizationTool === tool.id && (
+                        <Check className="h-5 w-5 text-blue-600" />
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-500 mt-1">{tool.description}</p>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Visualization Tool Configuration */}
+              {deliveryConfig.visualizationTool && (
+                <div className="mt-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                  <h3 className="font-medium text-gray-800 mb-2">
+                    {visualizationTools.find(t => t.id === deliveryConfig.visualizationTool)?.name} Configuration
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">Connection Method</label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option>Direct Connection</option>
+                        <option>OAuth 2.0</option>
+                        <option>API Key</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">Refresh Schedule</label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option>Automatic</option>
+                        <option>On-Demand</option>
+                        <option>Scheduled</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
+          )}
           
-          {/* Refresh Frequency */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Refresh Frequency</label>
-            <div className="grid grid-cols-4 gap-4">
-              <button 
-                className={`px-4 py-2 rounded-lg flex flex-col items-center ${deliveryConfig.frequency === 'realtime' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                onClick={() => setDeliveryConfig({...deliveryConfig, frequency: 'realtime'})}
-              >
-                <span className="text-sm font-medium">Real-time</span>
-                <span className="text-xs mt-1">Live updates</span>
-              </button>
-              <button 
-                className={`px-4 py-2 rounded-lg flex flex-col items-center ${deliveryConfig.frequency === 'daily' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                onClick={() => setDeliveryConfig({...deliveryConfig, frequency: 'daily'})}
-              >
-                <span className="text-sm font-medium">Daily</span>
-                <span className="text-xs mt-1">Once per day</span>
-              </button>
-              <button 
-                className={`px-4 py-2 rounded-lg flex flex-col items-center ${deliveryConfig.frequency === 'weekly' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                onClick={() => setDeliveryConfig({...deliveryConfig, frequency: 'weekly'})}
-              >
-                <span className="text-sm font-medium">Weekly</span>
-                <span className="text-xs mt-1">Once per week</span>
-              </button>
-              <button 
-                className={`px-4 py-2 rounded-lg flex flex-col items-center ${deliveryConfig.frequency === 'monthly' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                onClick={() => setDeliveryConfig({...deliveryConfig, frequency: 'monthly'})}
-              >
-                <span className="text-sm font-medium">Monthly</span>
-                <span className="text-xs mt-1">Once per month</span>
-              </button>
+          {/* Only show Format Options if not using visualization tools */}
+          {deliveryConfig.mechanism !== 'visualization' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Output Format</label>
+              <div className="flex space-x-4">
+                <button 
+                  className={`px-4 py-2 rounded ${deliveryConfig.format === 'json' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  onClick={() => setDeliveryConfig({...deliveryConfig, format: 'json'})}
+                >
+                  JSON
+                </button>
+                <button 
+                  className={`px-4 py-2 rounded ${deliveryConfig.format === 'csv' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  onClick={() => setDeliveryConfig({...deliveryConfig, format: 'csv'})}
+                >
+                  CSV
+                </button>
+                <button 
+                  className={`px-4 py-2 rounded ${deliveryConfig.format === 'xml' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  onClick={() => setDeliveryConfig({...deliveryConfig, format: 'xml'})}
+                >
+                  XML
+                </button>
+                <button 
+                  className={`px-4 py-2 rounded ${deliveryConfig.format === 'parquet' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  onClick={() => setDeliveryConfig({...deliveryConfig, format: 'parquet'})}
+                >
+                  Parquet
+                </button>
+              </div>
             </div>
-          </div>
+          )}
+          
+          {/* Only show Refresh Frequency if not using visualization tools */}
+          {deliveryConfig.mechanism !== 'visualization' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Refresh Frequency</label>
+              <div className="grid grid-cols-4 gap-4">
+                <button 
+                  className={`px-4 py-2 rounded-lg flex flex-col items-center ${deliveryConfig.frequency === 'realtime' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  onClick={() => setDeliveryConfig({...deliveryConfig, frequency: 'realtime'})}
+                >
+                  <span className="text-sm font-medium">Daily</span>
+                  <span className="text-xs mt-1">Once per day</span>
+                </button>
+                <button 
+                  className={`px-4 py-2 rounded-lg flex flex-col items-center ${deliveryConfig.frequency === 'weekly' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  onClick={() => setDeliveryConfig({...deliveryConfig, frequency: 'weekly'})}
+                >
+                  <span className="text-sm font-medium">Weekly</span>
+                  <span className="text-xs mt-1">Once per week</span>
+                </button>
+                <button 
+                  className={`px-4 py-2 rounded-lg flex flex-col items-center ${deliveryConfig.frequency === 'monthly' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  onClick={() => setDeliveryConfig({...deliveryConfig, frequency: 'monthly'})}
+                >
+                  <span className="text-sm font-medium">Monthly</span>
+                  <span className="text-xs mt-1">Once per month</span>
+                </button>
+              </div>
+            </div>
+          )}
           
           {deliveryConfig.mechanism === 'sftp' && (
             <div>
@@ -596,16 +670,43 @@ ${selectedColumns.map(col => `  ${col.name}: ${col.type === 'string' ? 'String' 
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <div className="text-sm text-gray-500">Mechanism</div>
-                  <div className="font-medium text-gray-900 mt-1 capitalize">{deliveryConfig.mechanism}</div>
+                  <div className="font-medium text-gray-900 mt-1 capitalize">
+                    {deliveryConfig.mechanism === 'visualization' 
+                      ? 'Visualization Tools' 
+                      : deliveryConfig.mechanism}
+                  </div>
                 </div>
-                <div>
-                  <div className="text-sm text-gray-500">Format</div>
-                  <div className="font-medium text-gray-900 mt-1 uppercase">{deliveryConfig.format}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-gray-500">Frequency</div>
-                  <div className="font-medium text-gray-900 mt-1 capitalize">{deliveryConfig.frequency}</div>
-                </div>
+                
+                {deliveryConfig.mechanism === 'visualization' ? (
+                  <div>
+                    <div className="text-sm text-gray-500">Tool</div>
+                    <div className="font-medium text-gray-900 mt-1">
+                      {deliveryConfig.visualizationTool === 'powerbi' && 'Power BI'}
+                      {deliveryConfig.visualizationTool === 'tableau' && 'Tableau'}
+                      {deliveryConfig.visualizationTool === 'looker' && 'Looker'}
+                      {deliveryConfig.visualizationTool === 'quicksight' && 'QuickSight'}
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="text-sm text-gray-500">Format</div>
+                    <div className="font-medium text-gray-900 mt-1 uppercase">{deliveryConfig.format}</div>
+                  </div>
+                )}
+                
+                {deliveryConfig.mechanism !== 'visualization' && (
+                  <div>
+                    <div className="text-sm text-gray-500">Frequency</div>
+                    <div className="font-medium text-gray-900 mt-1 capitalize">{deliveryConfig.frequency}</div>
+                  </div>
+                )}
+                
+                {deliveryConfig.mechanism === 'visualization' && (
+                  <div>
+                    <div className="text-sm text-gray-500">Connection</div>
+                    <div className="font-medium text-gray-900 mt-1">Direct Connection</div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -719,6 +820,89 @@ ${selectedColumns.map(col => `    ${col.name}`).join('\n')}
               </div>
             </div>
           )}
+          
+          {/* Visualization Tool Access Instructions */}
+          {deliveryConfig.mechanism === 'visualization' && (
+            <div>
+              <div className="mb-4">
+                <h4 className="font-medium text-gray-900 mb-2">Connection Details</h4>
+                <div className="bg-white p-3 rounded border border-gray-200">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <div className="text-sm text-gray-500">Data Source Name</div>
+                      <div className="font-medium text-gray-900 mt-1">{selectedProduct.name} Data Source</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Connection Type</div>
+                      <div className="font-medium text-gray-900 mt-1">Direct Connection</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Connection ID</div>
+                      <div className="relative mt-1">
+                        <input 
+                          type="text" 
+                          value={`vis-${contractId}`} 
+                          className="w-full pr-10 px-3 py-2 border border-gray-300 rounded" 
+                          readOnly 
+                        />
+                        <button className="absolute right-2 top-2 text-blue-600 hover:text-blue-800">
+                          <Copy className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Access Token</div>
+                      <div className="relative mt-1">
+                        <input 
+                          type="text" 
+                          value="••••••••••••••••••••••••••" 
+                          className="w-full pr-10 px-3 py-2 border border-gray-300 rounded bg-gray-50" 
+                          readOnly 
+                        />
+                        <button className="absolute right-2 top-2 text-blue-600 hover:text-blue-800">
+                          <Copy className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Integration Steps</h4>
+                <div className="bg-white p-4 rounded border border-gray-200">
+                  <ol className="list-decimal list-inside space-y-2 text-sm text-gray-700">
+                    <li>Open your {deliveryConfig.visualizationTool === 'powerbi' ? 'Power BI Desktop' : 
+                                  deliveryConfig.visualizationTool === 'tableau' ? 'Tableau Desktop' : 
+                                  deliveryConfig.visualizationTool === 'looker' ? 'Looker Studio' : 
+                                  'QuickSight'} application</li>
+                    <li>Navigate to "Add Data Source" or "Connect to Data"</li>
+                    <li>Select "Enterprise Data Contract" from the connectors list</li>
+                    <li>Enter the Connection ID and Access Token provided above</li>
+                    <li>Select the tables/fields you want to include in your visualization</li>
+                    <li>Create your reports and dashboards using the connected data</li>
+                  </ol>
+                </div>
+              </div>
+              
+              {/* Sample visualization preview based on selected tool */}
+              <div className="mt-4">
+                <h4 className="font-medium text-gray-900 mb-2">Sample Dashboard Preview</h4>
+                <div className="bg-gray-100 border border-gray-200 rounded h-48 flex items-center justify-center">
+                  <div className="text-center">
+                    <PieChart className="h-12 w-12 text-blue-600 mx-auto mb-2" />
+                    <p className="text-gray-500">
+                      {`A preview of your ${selectedProduct.name} data in ${
+                        deliveryConfig.visualizationTool === 'powerbi' ? 'Power BI' : 
+                        deliveryConfig.visualizationTool === 'tableau' ? 'Tableau' : 
+                        deliveryConfig.visualizationTool === 'looker' ? 'Looker Studio' : 
+                        'QuickSight'} will appear here after connection`}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -754,7 +938,11 @@ ${selectedColumns.map(col => `    ${col.name}`).join('\n')}
           <button 
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center"
             onClick={handleNextStep}
-            disabled={(currentStep === 1 && !selectedProduct) || (currentStep === 2 && selectedColumns.length === 0)}
+            disabled={
+              (currentStep === 1 && !selectedProduct) || 
+              (currentStep === 2 && selectedColumns.length === 0) ||
+              (currentStep === 3 && deliveryConfig.mechanism === 'visualization' && !deliveryConfig.visualizationTool)
+            }
           >
             Next
             <ArrowRight className="ml-2 h-4 w-4" />

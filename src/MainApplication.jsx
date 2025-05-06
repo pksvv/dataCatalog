@@ -276,7 +276,7 @@ const HomePage = ({ setActivePage }) => {
               className="mt-4 text-green-600 font-medium hover:text-green-800"
               onClick={() => setActivePage('catalog')}
             >
-              Explore Catalog
+              Explore Data Discoverability
             </button>
           </div>
           
