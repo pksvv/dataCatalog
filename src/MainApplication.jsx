@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Book, FileText, Search, Layout, Database, Sparkles, Users, Settings, Menu, X, Info, ExternalLink } from 'lucide-react';
 import DataCatalogInterface from './DataCatalogInterface';
+import DataCatalog from './DataCatalog';
 import TraditionalContractFlow from './TraditionalContractFlow';
 import GenAIInterface from './GenAIInterface';
 import InteractiveArchitecture from './InteractiveArchitecture';
@@ -20,6 +21,8 @@ const MainApplication = () => {
   // Render the appropriate content based on active page
   const renderContent = () => {
     switch(activePage) {
+      case 'catalog2':
+        return <DataCatalog />;
       case 'catalog':
         return <DataCatalogInterface />;
       case 'traditional':
@@ -37,7 +40,8 @@ const MainApplication = () => {
   // Navigation items
   const navItems = [
     { id: 'home', label: 'Home', icon: <Layout className="h-5 w-5" /> },
-    { id: 'catalog', label: 'Data Catalog', icon: <Book className="h-5 w-5" /> },
+    //{ id: 'catalog', label: 'Data Discoverability', icon: <Book className="h-5 w-5" /> },
+    { id: 'catalog2', label: 'Data Discoverability', icon: <Book className="h-5 w-5" /> },
     { id: 'traditional', label: 'Traditional Flow', icon: <FileText className="h-5 w-5" /> },
     { id: 'genai', label: 'GenAI Flow', icon: <Sparkles className="h-5 w-5" /> },
     { id: 'architecture', label: 'Architecture', icon: <Info className="h-5 w-5" /> }
@@ -266,7 +270,7 @@ const HomePage = ({ setActivePage }) => {
               <h3 className="text-lg font-semibold text-gray-900">Data Discovery</h3>
             </div>
             <p className="text-gray-600">
-              Browse and search enterprise data products through a central catalog with detailed metadata.
+              Browse and search enterprise data products through a central Data Discoverability tool with detailed metadata.
             </p>
             <button 
               className="mt-4 text-green-600 font-medium hover:text-green-800"

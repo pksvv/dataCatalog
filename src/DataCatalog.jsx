@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
-import { Search, Database, Shield, Clock, User, Info, Star, Tag } from 'lucide-react';
+import { Search, Database, Shield, Clock, User, Info, Star, Tag, Eye, FileText, BarChart2, DollarSign } from 'lucide-react';
 
 const DataCatalogInterface = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showMetadata, setShowMetadata] = useState(false);
+  const [showDescription, setShowDescription] = useState(false);
+  const [showUsage, setShowUsage] = useState(false);
+  const [showMetrics, setShowMetrics] = useState(false);
+  const [showCost, setShowCost] = useState(false);
   
   // Mock data products
   const dataProducts = [
@@ -25,7 +30,23 @@ const DataCatalogInterface = () => {
         { name: "lifetime_value", type: "number", sensitivity: "medium", description: "Calculated lifetime value of customer" },
         { name: "acquisition_date", type: "date", sensitivity: "low", description: "Date when customer was acquired" },
         { name: "last_purchase_date", type: "date", sensitivity: "low", description: "Date of customer's most recent purchase" }
-      ]
+      ],
+      usage: {
+        activeContracts: 24,
+        monthlyQueries: "1.2M"
+      },
+      metrics: {
+        uptime: "99.8%",
+        avgResponseTime: "42ms",
+        dataQuality: "95%",
+        completeness: "98%"
+      },
+      cost: {
+        storagePerMonth: "$120",
+        queryPerMillion: "$0.35",
+        apiCallsPerThousand: "$0.25",
+        monthlyTotal: "$850"
+      }
     },
     {
       id: 2,
@@ -46,7 +67,23 @@ const DataCatalogInterface = () => {
         { name: "supplier_id", type: "string", sensitivity: "medium", description: "Identifier for the supplier" },
         { name: "cost_price", type: "number", sensitivity: "high", description: "Cost price of the product" },
         { name: "last_restock_date", type: "date", sensitivity: "low", description: "Date of last inventory restock" }
-      ]
+      ],
+      usage: {
+        activeContracts: 18,
+        monthlyQueries: "850K"
+      },
+      metrics: {
+        uptime: "99.9%",
+        avgResponseTime: "38ms",
+        dataQuality: "97%",
+        completeness: "99%"
+      },
+      cost: {
+        storagePerMonth: "$90",
+        queryPerMillion: "$0.30",
+        apiCallsPerThousand: "$0.22",
+        monthlyTotal: "$520"
+      }
     },
     {
       id: 3,
@@ -68,7 +105,23 @@ const DataCatalogInterface = () => {
         { name: "payment_method", type: "string", sensitivity: "medium", description: "Method of payment" },
         { name: "transaction_date", type: "date", sensitivity: "low", description: "Date and time of the transaction" },
         { name: "store_id", type: "string", sensitivity: "low", description: "Identifier of the store where transaction occurred" }
-      ]
+      ],
+      usage: {
+        activeContracts: 32,
+        monthlyQueries: "2.4M"
+      },
+      metrics: {
+        uptime: "99.7%",
+        avgResponseTime: "45ms",
+        dataQuality: "95%",
+        completeness: "96%"
+      },
+      cost: {
+        storagePerMonth: "$180",
+        queryPerMillion: "$0.32",
+        apiCallsPerThousand: "$0.28",
+        monthlyTotal: "$1,250"
+      }
     }
   ];
 
@@ -82,6 +135,11 @@ const DataCatalogInterface = () => {
   
   const handleProductSelect = (product) => {
     setSelectedProduct(product);
+    setShowMetadata(false);
+    setShowDescription(false);
+    setShowUsage(false);
+    setShowMetrics(false);
+    setShowCost(false);
   };
   
   const getSensitivityColor = (level) => {
@@ -91,6 +149,26 @@ const DataCatalogInterface = () => {
       case 'low': return 'bg-green-100 text-green-800';
       default: return 'bg-gray-100 text-gray-800';
     }
+  };
+  
+  const toggleMetadata = () => {
+    setShowMetadata(!showMetadata);
+  };
+  
+  const toggleDescription = () => {
+    setShowDescription(!showDescription);
+  };
+  
+  const toggleUsage = () => {
+    setShowUsage(!showUsage);
+  };
+  
+  const toggleMetrics = () => {
+    setShowMetrics(!showMetrics);
+  };
+  
+  const toggleCost = () => {
+    setShowCost(!showCost);
   };
   
   return (
@@ -189,16 +267,46 @@ const DataCatalogInterface = () => {
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold text-gray-900">{selectedProduct.name}</h2>
                 <div className="flex space-x-2">
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                  <button 
+                    className="px-3 py-1 text-sm border border-gray-300 text-gray-700 rounded hover:bg-gray-50 flex items-center"
+                    onClick={toggleMetadata}
+                  >
+                    <FileText className="h-4 w-4 mr-1" />
+                    View Metadata
+                  </button>
+                  <button 
+                    className="px-3 py-1 text-sm border border-gray-300 text-gray-700 rounded hover:bg-gray-50 flex items-center"
+                    onClick={toggleUsage}
+                  >
+                    <Eye className="h-4 w-4 mr-1" />
+                    View Usage
+                  </button>
+                  <button 
+                    className="px-3 py-1 text-sm border border-gray-300 text-gray-700 rounded hover:bg-gray-50 flex items-center"
+                    onClick={toggleMetrics}
+                  >
+                    <BarChart2 className="h-4 w-4 mr-1" />
+                    View Metrics
+                  </button>
+                  <button 
+                    className="px-3 py-1 text-sm border border-gray-300 text-gray-700 rounded hover:bg-gray-50 flex items-center"
+                    onClick={toggleCost}
+                  >
+                    <DollarSign className="h-4 w-4 mr-1" />
+                    View Cost
+                  </button>
+                  <button className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
                     Create Contract
                   </button>
-                  <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50">
+                  <button className="px-3 py-1 text-sm border border-gray-300 text-gray-700 rounded hover:bg-gray-50">
                     View Lineage
                   </button>
                 </div>
               </div>
               
-              <p className="mt-2 text-gray-600">{selectedProduct.description}</p>
+              {showMetadata && (
+                <p className="mt-2 text-gray-600">{selectedProduct.description}</p>
+              )}
               
               <div className="mt-6 grid grid-cols-3 gap-4">
                 <div className="bg-gray-50 p-4 rounded">
@@ -213,7 +321,7 @@ const DataCatalogInterface = () => {
                     <Clock className="h-4 w-4 mr-2" />
                     <span>Update Frequency</span>
                   </div>
-                  <p className="mt-1 font-medium">{selectedProduct.updateFrequency}</p>
+                  <p className="mt-1 items-center font-medium">{selectedProduct.updateFrequency}</p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded">
                   <div className="flex items-center text-sm text-gray-500">
@@ -225,6 +333,73 @@ const DataCatalogInterface = () => {
                   </p>
                 </div>
               </div>
+              
+              {/* Usage Section - Hidden by default */}
+              {showUsage && (
+                <div className="mt-6">
+                  <h3 className="text-lg font-medium text-gray-900">Usage</h3>
+                  <div className="mt-4 grid grid-cols-2 gap-4">
+                    <div className="bg-indigo-50 p-4 rounded">
+                      <div className="text-2xl font-semibold text-indigo-700">{selectedProduct.usage.activeContracts}</div>
+                      <div className="text-sm text-indigo-500">Active Contracts</div>
+                    </div>
+                    <div className="bg-indigo-50 p-4 rounded">
+                      <div className="text-2xl font-semibold text-indigo-700">{selectedProduct.usage.monthlyQueries}</div>
+                      <div className="text-sm text-indigo-500">Monthly Queries</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Metrics Section - Hidden by default */}
+              {showMetrics && (
+                <div className="mt-6">
+                  <h3 className="text-lg font-medium text-gray-900">Metrics</h3>
+                  <div className="mt-4 grid grid-cols-4 gap-4">
+                    <div className="bg-blue-50 p-4 rounded">
+                      <div className="text-2xl font-semibold text-blue-700">{selectedProduct.metrics.uptime}</div>
+                      <div className="text-sm text-blue-500">Uptime</div>
+                    </div>
+                    <div className="bg-blue-50 p-4 rounded">
+                      <div className="text-2xl font-semibold text-blue-700">{selectedProduct.metrics.avgResponseTime}</div>
+                      <div className="text-sm text-blue-500">Avg. Response Time</div>
+                    </div>
+                    <div className="bg-blue-50 p-4 rounded">
+                      <div className="text-2xl font-semibold text-blue-700">{selectedProduct.metrics.dataQuality}</div>
+                      <div className="text-sm text-blue-500">Data Quality</div>
+                    </div>
+                    <div className="bg-blue-50 p-4 rounded">
+                      <div className="text-2xl font-semibold text-blue-700">{selectedProduct.metrics.completeness}</div>
+                      <div className="text-sm text-blue-500">Completeness</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Cost Section - Hidden by default */}
+              {showCost && (
+                <div className="mt-6">
+                  <h3 className="text-lg font-medium text-gray-900">Cost Information</h3>
+                  <div className="mt-4 grid grid-cols-4 gap-4">
+                    <div className="bg-green-50 p-4 rounded">
+                      <div className="text-2xl font-semibold text-green-700">{selectedProduct.cost.storagePerMonth}</div>
+                      <div className="text-sm text-green-500">Storage Cost/Month</div>
+                    </div>
+                    <div className="bg-green-50 p-4 rounded">
+                      <div className="text-2xl font-semibold text-green-700">{selectedProduct.cost.queryPerMillion}</div>
+                      <div className="text-sm text-green-500">Cost per 1M Queries</div>
+                    </div>
+                    <div className="bg-green-50 p-4 rounded">
+                      <div className="text-2xl font-semibold text-green-700">{selectedProduct.cost.apiCallsPerThousand}</div>
+                      <div className="text-sm text-green-500">Cost per 1K API Calls</div>
+                    </div>
+                    <div className="bg-green-50 p-4 rounded">
+                      <div className="text-2xl font-semibold text-green-700">{selectedProduct.cost.monthlyTotal}</div>
+                      <div className="text-sm text-green-500">Total Monthly Cost</div>
+                    </div>
+                  </div>
+                </div>
+              )}
               
               <div className="mt-8">
                 <h3 className="text-lg font-medium text-gray-900">Available Columns</h3>
@@ -241,16 +416,27 @@ const DataCatalogInterface = () => {
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Sensitivity
                         </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Description
-                        </th>
+                        {showDescription && (
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Description
+                          </th>
+                        )}
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {selectedProduct.columns.map((column, index) => (
                         <tr key={index} className="hover:bg-gray-50">
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            {column.name}
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600 hover:text-blue-800">
+                            <a 
+                              href="#" 
+                              onClick={(e) => {
+                                e.preventDefault();
+                                toggleDescription();
+                              }}
+                              title={column.description}
+                            >
+                              {column.name}
+                            </a>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {column.type}
@@ -260,35 +446,15 @@ const DataCatalogInterface = () => {
                               {column.sensitivity}
                             </span>
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-500">
-                            {column.description}
-                          </td>
+                          {showDescription && (
+                            <td className="px-6 py-4 text-sm text-gray-500">
+                              {column.description}
+                            </td>
+                          )}
                         </tr>
                       ))}
                     </tbody>
                   </table>
-                </div>
-              </div>
-              
-              <div className="mt-8">
-                <h3 className="text-lg font-medium text-gray-900">Usage & Metrics</h3>
-                <div className="mt-4 grid grid-cols-4 gap-4">
-                  <div className="bg-gray-50 p-4 rounded">
-                    <div className="text-2xl font-semibold">24</div>
-                    <div className="text-sm text-gray-500">Active Contracts</div>
-                  </div>
-                  <div className="bg-gray-50 p-4 rounded">
-                    <div className="text-2xl font-semibold">1.2M</div>
-                    <div className="text-sm text-gray-500">Monthly Queries</div>
-                  </div>
-                  <div className="bg-gray-50 p-4 rounded">
-                    <div className="text-2xl font-semibold">99.8%</div>
-                    <div className="text-sm text-gray-500">Uptime</div>
-                  </div>
-                  <div className="bg-gray-50 p-4 rounded">
-                    <div className="text-2xl font-semibold">42ms</div>
-                    <div className="text-sm text-gray-500">Avg. Response Time</div>
-                  </div>
                 </div>
               </div>
             </div>
