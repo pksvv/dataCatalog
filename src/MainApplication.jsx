@@ -46,11 +46,11 @@ const MainApplication = () => {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className={`bg-indigo-900 text-white transition-all duration-300 ${sidebarExpanded ? 'w-64' : 'w-20'}`}>
+      <div className={`bg-indigo-900 text-white transition-all duration-300 ${sidebarExpanded ? 'w-72' : 'w-20'}`}>
         <div className="flex items-center justify-between p-4 border-b border-indigo-800">
           <div className={`flex items-center ${sidebarExpanded ? 'justify-start' : 'justify-center w-full'}`}>
             <Database className="h-8 w-8 text-indigo-300" />
-            {sidebarExpanded && <span className="ml-3 font-semibold text-xl">Data Catalog</span>}
+            {sidebarExpanded && <span className="ml-3 font-semibold text-xl">Data Marketplace</span>}
           </div>
           <button 
             className={`text-gray-300 hover:text-white ${!sidebarExpanded && 'hidden'}`}
@@ -147,7 +147,7 @@ const HomePage = ({ setActivePage }) => {
       <div className="bg-white shadow-sm rounded-lg p-8 mb-8">
         <h1 className="text-3xl font-bold text-indigo-900 mb-4">Data Product Strategy Prototype</h1>
         <p className="text-lg text-gray-600 mb-6">
-          This prototype demonstrates ALIN's vision for a data product strategy within the enterprise, 
+          This prototype demonstrates vision for a data product marketplace within the enterprise, 
           showcasing both traditional catalog-based and GenAI-powered natural language approaches to data contracts.
         </p>
         
