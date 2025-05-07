@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
-import { Search, Database, Shield, Clock, User, Info, Star, Tag, Eye, FileText, BarChart2, DollarSign } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { 
+  Search, Database, Shield, Clock, User, Info, File, 
+  Tag, Eye, FileText, BarChart2, DollarSign, 
+  AlertTriangle, Activity, CheckSquare, MoreVertical, ArrowRight, ArrowLeft
+} from 'lucide-react';
 
 const DataCatalogInterface = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -8,6 +12,11 @@ const DataCatalogInterface = () => {
   const [showUsage, setShowUsage] = useState(false);
   const [showMetrics, setShowMetrics] = useState(false);
   const [showCost, setShowCost] = useState(false);
+  const [showLineage, setShowLineage] = useState(false);
+  const [showLogs, setShowLogs] = useState(false);
+  const [showFailedJobs, setShowFailedJobs] = useState(false);
+  const [showDataQuality, setShowDataQuality] = useState(false);
+  const [showMoreOptions, setShowMoreOptions] = useState(false);
   
   // Mock data products
   const dataProducts = [
@@ -46,7 +55,38 @@ const DataCatalogInterface = () => {
         queryPerMillion: "$0.35",
         apiCallsPerThousand: "$0.25",
         monthlyTotal: "$850"
-      }
+      },
+      lineage: {
+        upstream: [
+          { id: "src1", name: "CRM System", type: "source" },
+          { id: "src2", name: "Web Analytics", type: "source" },
+          { id: "src3", name: "Mobile App", type: "source" }
+        ],
+        transformations: [
+          { id: "etl1", name: "Customer Data Integration", type: "process" },
+          { id: "etl2", name: "Identity Resolution", type: "process" }
+        ],
+        downstream: [
+          { id: "tgt1", name: "Marketing Segments", type: "target" },
+          { id: "tgt2", name: "Personalization Engine", type: "target" },
+          { id: "tgt3", name: "Customer Service Dashboard", type: "target" }
+        ]
+      },
+      logs: [
+        { timestamp: "2025-05-06T08:12:34", level: "INFO", message: "Daily refresh completed successfully" },
+        { timestamp: "2025-05-06T02:15:22", level: "WARN", message: "Web Analytics source delayed by 15 minutes" },
+        { timestamp: "2025-05-05T08:14:12", level: "INFO", message: "Daily refresh completed successfully" }
+      ],
+      failedJobs: [
+        { id: "job1", timestamp: "2025-05-04T08:22:17", name: "Identity Resolution", status: "FAILED", reason: "Timeout after 120 seconds" },
+        { id: "job2", timestamp: "2025-04-28T02:45:12", name: "Mobile App Integration", status: "FAILED", reason: "Schema validation error" }
+      ],
+      dataQuality: [
+        { metric: "Completeness", score: 97, trend: "up", description: "Percentage of non-null values" },
+        { metric: "Accuracy", score: 94, trend: "stable", description: "Correctness of data values" },
+        { metric: "Consistency", score: 96, trend: "up", description: "Consistency across related data elements" },
+        { metric: "Timeliness", score: 92, trend: "down", description: "How up-to-date the data is" }
+      ]
     },
     {
       id: 2,
@@ -83,6 +123,19 @@ const DataCatalogInterface = () => {
         queryPerMillion: "$0.30",
         apiCallsPerThousand: "$0.22",
         monthlyTotal: "$520"
+      },
+      lineage: {
+        upstream: [
+          { id: "src1", name: "ERP System", type: "source" },
+          { id: "src2", name: "Warehouse Management", type: "source" }
+        ],
+        transformations: [
+          { id: "etl1", name: "Inventory Consolidation", type: "process" }
+        ],
+        downstream: [
+          { id: "tgt1", name: "E-commerce Platform", type: "target" },
+          { id: "tgt2", name: "Purchasing Recommendations", type: "target" }
+        ]
       }
     },
     {
@@ -121,6 +174,22 @@ const DataCatalogInterface = () => {
         queryPerMillion: "$0.32",
         apiCallsPerThousand: "$0.28",
         monthlyTotal: "$1,250"
+      },
+      lineage: {
+        upstream: [
+          { id: "src1", name: "POS System", type: "source" },
+          { id: "src2", name: "E-commerce Platform", type: "source" },
+          { id: "src3", name: "Mobile App Purchases", type: "source" }
+        ],
+        transformations: [
+          { id: "etl1", name: "Transaction Normalization", type: "process" },
+          { id: "etl2", name: "Revenue Calculation", type: "process" }
+        ],
+        downstream: [
+          { id: "tgt1", name: "Financial Reporting", type: "target" },
+          { id: "tgt2", name: "Sales Analytics", type: "target" },
+          { id: "tgt3", name: "Customer 360", type: "target" }
+        ]
       }
     }
   ];
@@ -140,6 +209,11 @@ const DataCatalogInterface = () => {
     setShowUsage(false);
     setShowMetrics(false);
     setShowCost(false);
+    setShowLineage(false);
+    setShowLogs(false);
+    setShowFailedJobs(false);
+    setShowDataQuality(false);
+    setShowMoreOptions(false);
   };
   
   const getSensitivityColor = (level) => {
@@ -151,24 +225,56 @@ const DataCatalogInterface = () => {
     }
   };
   
-  const toggleMetadata = () => {
-    setShowMetadata(!showMetadata);
+  // Toggle functions
+  const toggleMetadata = () => setShowMetadata(!showMetadata);
+  const toggleDescription = () => setShowDescription(!showDescription);
+  const toggleUsage = () => setShowUsage(!showUsage);
+  const toggleMetrics = () => setShowMetrics(!showMetrics);
+  const toggleCost = () => setShowCost(!showCost);
+  const toggleLineage = () => {
+    setShowLineage(!showLineage);
+    // Close other views when opening lineage
+    if (!showLineage) {
+      setShowLogs(false);
+      setShowFailedJobs(false);
+      setShowDataQuality(false);
+      setShowMetadata(false);
+      setShowUsage(false);
+      setShowMetrics(false);
+      setShowCost(false);
+    }
   };
-  
-  const toggleDescription = () => {
-    setShowDescription(!showDescription);
+  const toggleLogs = () => {
+    setShowLogs(!showLogs);
+    setShowMoreOptions(false);
   };
-  
-  const toggleUsage = () => {
-    setShowUsage(!showUsage);
+  const toggleFailedJobs = () => {
+    setShowFailedJobs(!showFailedJobs);
+    setShowMoreOptions(false);
   };
-  
-  const toggleMetrics = () => {
-    setShowMetrics(!showMetrics);
+  const toggleDataQuality = () => {
+    setShowDataQuality(!showDataQuality);
+    setShowMoreOptions(false);
   };
+  const toggleMoreOptions = () => setShowMoreOptions(!showMoreOptions);
   
-  const toggleCost = () => {
-    setShowCost(!showCost);
+  // Lineage node component
+  const LineageNode = ({ node, type }) => {
+    const getNodeColor = (nodeType) => {
+      switch(nodeType) {
+        case 'source': return 'bg-blue-100 border-blue-300';
+        case 'process': return 'bg-purple-100 border-purple-300';
+        case 'target': return 'bg-green-100 border-green-300';
+        default: return 'bg-gray-100 border-gray-300';
+      }
+    };
+    
+    return (
+      <div className={`p-3 rounded-lg border ${getNodeColor(node.type)} mb-2`}>
+        <div className="font-medium">{node.name}</div>
+        <div className="text-xs text-gray-500 capitalize">{node.type}</div>
+      </div>
+    );
   };
   
   return (
@@ -266,46 +372,274 @@ const DataCatalogInterface = () => {
             <div className="p-6">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold text-gray-900">{selectedProduct.name}</h2>
-                <div className="flex space-x-2">
+                <div className="flex items-center space-x-2 relative">
+                  {/* Primary Buttons - Always Visible */}
                   <button 
-                    className="px-3 py-1 text-sm border border-gray-300 text-gray-700 rounded hover:bg-gray-50 flex items-center"
+                    className={`px-3 py-1 text-sm border ${showMetadata ? 'bg-blue-50 border-blue-300' : 'border-gray-300'} text-gray-700 rounded hover:bg-gray-50 flex items-center`}
                     onClick={toggleMetadata}
                   >
                     <FileText className="h-4 w-4 mr-1" />
                     View Metadata
                   </button>
                   <button 
-                    className="px-3 py-1 text-sm border border-gray-300 text-gray-700 rounded hover:bg-gray-50 flex items-center"
+                    className={`px-3 py-1 text-sm border ${showUsage ? 'bg-blue-50 border-blue-300' : 'border-gray-300'} text-gray-700 rounded hover:bg-gray-50 flex items-center`}
                     onClick={toggleUsage}
                   >
                     <Eye className="h-4 w-4 mr-1" />
                     View Usage
                   </button>
                   <button 
-                    className="px-3 py-1 text-sm border border-gray-300 text-gray-700 rounded hover:bg-gray-50 flex items-center"
+                    className={`px-3 py-1 text-sm border ${showMetrics ? 'bg-blue-50 border-blue-300' : 'border-gray-300'} text-gray-700 rounded hover:bg-gray-50 flex items-center`}
                     onClick={toggleMetrics}
                   >
                     <BarChart2 className="h-4 w-4 mr-1" />
                     View Metrics
                   </button>
                   <button 
-                    className="px-3 py-1 text-sm border border-gray-300 text-gray-700 rounded hover:bg-gray-50 flex items-center"
+                    className={`px-3 py-1 text-sm border ${showCost ? 'bg-blue-50 border-blue-300' : 'border-gray-300'} text-gray-700 rounded hover:bg-gray-50 flex items-center`}
                     onClick={toggleCost}
                   >
                     <DollarSign className="h-4 w-4 mr-1" />
                     View Cost
                   </button>
+                  <button 
+                    className={`px-3 py-1 text-sm border ${showLineage ? 'bg-blue-50 border-blue-300' : 'border-gray-300'} text-gray-700 rounded hover:bg-gray-50 flex items-center`}
+                    onClick={toggleLineage}
+                  >
+                    <ArrowRight className="h-4 w-4 mr-1" />
+                    View Lineage
+                  </button>
                   <button className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
                     Create Contract
                   </button>
-                  <button className="px-3 py-1 text-sm border border-gray-300 text-gray-700 rounded hover:bg-gray-50">
-                    View Lineage
+                  
+                  {/* More Options Button */}
+                  <button 
+                    className="px-2 py-1 text-sm border border-gray-300 text-gray-700 rounded hover:bg-gray-50"
+                    onClick={toggleMoreOptions}
+                  >
+                    <MoreVertical className="h-4 w-4" />
                   </button>
+                  
+                  {/* More Options Dropdown */}
+                  {showMoreOptions && (
+                    <div className="absolute right-0 top-10 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                      <div className="py-1">
+                        <button 
+                          className="w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 flex items-center"
+                          onClick={toggleLogs}
+                        >
+                          <Activity className="h-4 w-4 mr-2" />
+                          View Logs
+                        </button>
+                        <button 
+                          className="w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 flex items-center"
+                          onClick={toggleFailedJobs}
+                        >
+                          <AlertTriangle className="h-4 w-4 mr-2" />
+                          View Failed Jobs
+                        </button>
+                        <button 
+                          className="w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 flex items-center"
+                          onClick={toggleDataQuality}
+                        >
+                          <CheckSquare className="h-4 w-4 mr-2" />
+                          View Data Quality
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               
+              {/* Lineage View - Toggle screen */}
+              {showLineage && selectedProduct.lineage && (
+                <div className="mt-6 border border-gray-200 rounded-lg p-4 bg-white">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Data Lineage</h3>
+                  
+                  <div className="flex justify-between items-start">
+                    {/* Upstream Sources */}
+                    <div className="w-1/3 pr-4">
+                      <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                        <Database className="h-4 w-4 mr-1 text-blue-500" />
+                        Upstream Sources
+                      </h4>
+                      <div className="space-y-2">
+                        {selectedProduct.lineage.upstream.map(node => (
+                          <LineageNode key={node.id} node={node} type="source" />
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Transformations */}
+                    <div className="w-1/3 px-4 flex flex-col items-center">
+                      <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                        <ArrowRight className="h-4 w-4 mr-1 text-purple-500" />
+                        Transformations
+                      </h4>
+                      
+                      {/* Flow arrows */}
+                      <div className="flex justify-between w-full mb-4">
+                        <ArrowRight className="h-6 w-6 text-blue-400" />
+                        <ArrowRight className="h-6 w-6 text-blue-400" />
+                      </div>
+                      
+                      <div className="space-y-2 w-full">
+                        {selectedProduct.lineage.transformations.map(node => (
+                          <LineageNode key={node.id} node={node} type="process" />
+                        ))}
+                      </div>
+                      
+                      {/* Flow arrows */}
+                      <div className="flex justify-between w-full mt-4">
+                        <ArrowRight className="h-6 w-6 text-blue-400" />
+                        <ArrowRight className="h-6 w-6 text-blue-400" />
+                      </div>
+                    </div>
+                    
+                    {/* Downstream Targets */}
+                    <div className="w-1/3 pl-4">
+                      <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                        <Database className="h-4 w-4 mr-1 text-green-500" />
+                        Downstream Systems
+                      </h4>
+                      <div className="space-y-2">
+                        {selectedProduct.lineage.downstream.map(node => (
+                          <LineageNode key={node.id} node={node} type="target" />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Logs View */}
+              {showLogs && selectedProduct.logs && (
+                <div className="mt-6 border border-gray-200 rounded-lg p-4">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Recent Logs</h3>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Timestamp
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Level
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Message
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {selectedProduct.logs.map((log, idx) => (
+                          <tr key={idx}>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              {new Date(log.timestamp).toLocaleString()}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <span className={`px-2 py-1 text-xs rounded-full ${
+                                log.level === "INFO" ? "bg-blue-100 text-blue-800" : 
+                                log.level === "WARN" ? "bg-yellow-100 text-yellow-800" : 
+                                "bg-red-100 text-red-800"
+                              }`}>
+                                {log.level}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 text-sm text-gray-500">
+                              {log.message}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+              
+              {/* Failed Jobs View */}
+              {showFailedJobs && selectedProduct.failedJobs && (
+                <div className="mt-6 border border-gray-200 rounded-lg p-4">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Failed Jobs</h3>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Job ID
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Timestamp
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Name
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Reason
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {selectedProduct.failedJobs.map((job) => (
+                          <tr key={job.id}>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">
+                              {job.id}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              {new Date(job.timestamp).toLocaleString()}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                              {job.name}
+                            </td>
+                            <td className="px-6 py-4 text-sm text-red-500">
+                              {job.reason}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+              
+              {/* Data Quality View */}
+              {showDataQuality && selectedProduct.dataQuality && (
+                <div className="mt-6 border border-gray-200 rounded-lg p-4">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Data Quality Metrics</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    {selectedProduct.dataQuality.map((item, idx) => (
+                      <div key={idx} className="bg-white p-4 rounded border border-gray-200">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-500">{item.metric}</span>
+                          <span className={`text-xs px-2 py-1 rounded-full ${
+                            item.trend === "up" ? "bg-green-100 text-green-800" : 
+                            item.trend === "down" ? "bg-red-100 text-red-800" : 
+                            "bg-blue-100 text-blue-800"
+                          }`}>
+                            {item.trend === "up" ? "↑" : item.trend === "down" ? "↓" : "→"} {item.trend}
+                          </span>
+                        </div>
+                        <div className="mt-2 text-2xl font-semibold">{item.score}%</div>
+                        <div className="mt-1 text-xs text-gray-500">{item.description}</div>
+                        <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className={`h-2 rounded-full ${
+                              item.score >= 90 ? "bg-green-500" : 
+                              item.score >= 80 ? "bg-yellow-500" : 
+                              "bg-red-500"
+                            }`} 
+                            style={{ width: `${item.score}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
               {showMetadata && (
-                <p className="mt-2 text-gray-600">{selectedProduct.description}</p>
+                <p className="mt-4 text-gray-600">{selectedProduct.description}</p>
               )}
               
               <div className="mt-6 grid grid-cols-3 gap-4">
@@ -328,13 +662,13 @@ const DataCatalogInterface = () => {
                     <Shield className="h-4 w-4 mr-2" />
                     <span>Sensitivity</span>
                   </div>
-                  <p className={`mt-1 font-medium ${getSensitivityColor(selectedProduct.sensitivity)}`}>
+                  <p className={`mt-1 font-medium px-2 py-1 rounded-full ${getSensitivityColor(selectedProduct.sensitivity)}`}>
                     {selectedProduct.sensitivity}
                   </p>
                 </div>
               </div>
               
-              {/* Usage Section - Hidden by default */}
+              {/* Usage Section */}
               {showUsage && (
                 <div className="mt-6">
                   <h3 className="text-lg font-medium text-gray-900">Usage</h3>
@@ -351,7 +685,7 @@ const DataCatalogInterface = () => {
                 </div>
               )}
               
-              {/* Metrics Section - Hidden by default */}
+              {/* Metrics Section */}
               {showMetrics && (
                 <div className="mt-6">
                   <h3 className="text-lg font-medium text-gray-900">Metrics</h3>
@@ -376,7 +710,7 @@ const DataCatalogInterface = () => {
                 </div>
               )}
               
-              {/* Cost Section - Hidden by default */}
+              {/* Cost Section */}
               {showCost && (
                 <div className="mt-6">
                   <h3 className="text-lg font-medium text-gray-900">Cost Information</h3>
@@ -401,62 +735,65 @@ const DataCatalogInterface = () => {
                 </div>
               )}
               
-              <div className="mt-8">
-                <h3 className="text-lg font-medium text-gray-900">Available Columns</h3>
-                <div className="mt-4 border border-gray-200 rounded overflow-hidden">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Name
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Type
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Sensitivity
-                        </th>
-                        {showDescription && (
+              {/* Columns Table */}
+              {!showLineage && (
+                <div className="mt-8">
+                  <h3 className="text-lg font-medium text-gray-900">Available Columns</h3>
+                  <div className="mt-4 border border-gray-200 rounded overflow-hidden">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
                           <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Description
+                            Name
                           </th>
-                        )}
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {selectedProduct.columns.map((column, index) => (
-                        <tr key={index} className="hover:bg-gray-50">
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600 hover:text-blue-800">
-                            <a 
-                              href="#" 
-                              onClick={(e) => {
-                                e.preventDefault();
-                                toggleDescription();
-                              }}
-                              title={column.description}
-                            >
-                              {column.name}
-                            </a>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {column.type}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm">
-                            <span className={`px-2 py-1 text-xs rounded-full ${getSensitivityColor(column.sensitivity)}`}>
-                              {column.sensitivity}
-                            </span>
-                          </td>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Type
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Sensitivity
+                          </th>
                           {showDescription && (
-                            <td className="px-6 py-4 text-sm text-gray-500">
-                              {column.description}
-                            </td>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Description
+                            </th>
                           )}
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {selectedProduct.columns.map((column, index) => (
+                          <tr key={index} className="hover:bg-gray-50">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600 hover:text-blue-800">
+                              <a 
+                                href="#" 
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  toggleDescription();
+                                }}
+                                title={column.description}
+                              >
+                                {column.name}
+                              </a>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              {column.type}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm">
+                              <span className={`px-2 py-1 text-xs rounded-full ${getSensitivityColor(column.sensitivity)}`}>
+                                {column.sensitivity}
+                              </span>
+                            </td>
+                            {showDescription && (
+                              <td className="px-6 py-4 text-sm text-gray-500">
+                                {column.description}
+                              </td>
+                            )}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           ) : (
             <div className="h-full flex items-center justify-center">

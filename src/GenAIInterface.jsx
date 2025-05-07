@@ -10,11 +10,12 @@ const GenAIInterface = () => {
   const [derivedColumns, setDerivedColumns] = useState([]);
   const [error, setError] = useState('');
   
-  // State for contract configuration
+  // State for contract configuration with added visualizationTool
   const [deliveryConfig, setDeliveryConfig] = useState({
     mechanism: 'api',
     format: 'json',
-    frequency: 'daily'
+    frequency: 'daily',
+    visualizationTool: '' // New property for visualization tool
   });
   
   // State for tracking creation progress
@@ -462,7 +463,7 @@ LIMIT 100`;
           {/* Delivery Mechanism */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Delivery Mechanism</label>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-4 gap-4">
               <div 
                 className={`border rounded-lg p-4 cursor-pointer ${deliveryConfig.mechanism === 'api' ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-300'}`}
                 onClick={() => setDeliveryConfig({...deliveryConfig, mechanism: 'api'})}
@@ -503,39 +504,108 @@ LIMIT 100`;
                 <h3 className="text-center font-medium">GraphQL</h3>
                 <p className="text-xs text-center text-gray-500 mt-1">Flexible querying with GraphQL schema</p>
               </div>
+              
+              {/* New Visualisation Tools button */}
+              <div 
+                className={`border rounded-lg p-4 cursor-pointer ${deliveryConfig.mechanism === 'visualization' ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-300'}`}
+                onClick={() => setDeliveryConfig({...deliveryConfig, mechanism: 'visualization', visualizationTool: ''})}
+              >
+                <div className="flex justify-center mb-2">
+                  <svg className="h-8 w-8 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                    <line x1="9" y1="21" x2="9" y2="9"></line>
+                  </svg>
+                </div>
+                <h3 className="text-center font-medium">Visualisation Tools</h3>
+                <p className="text-xs text-center text-gray-500 mt-1">Connect with visualization platforms</p>
+              </div>
             </div>
           </div>
           
-          {/* Format Options */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Output Format</label>
-            <div className="flex space-x-4">
-              <button 
-                className={`px-4 py-2 rounded ${deliveryConfig.format === 'json' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                onClick={() => setDeliveryConfig({...deliveryConfig, format: 'json'})}
-              >
-                JSON
-              </button>
-              <button 
-                className={`px-4 py-2 rounded ${deliveryConfig.format === 'csv' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                onClick={() => setDeliveryConfig({...deliveryConfig, format: 'csv'})}
-              >
-                CSV
-              </button>
-              <button 
-                className={`px-4 py-2 rounded ${deliveryConfig.format === 'xml' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                onClick={() => setDeliveryConfig({...deliveryConfig, format: 'xml'})}
-              >
-                XML
-              </button>
-              <button 
-                className={`px-4 py-2 rounded ${deliveryConfig.format === 'parquet' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                onClick={() => setDeliveryConfig({...deliveryConfig, format: 'parquet'})}
-              >
-                Parquet
-              </button>
+          {/* Visualization Tool Selection (only shows when visualization is selected) */}
+          {deliveryConfig.mechanism === 'visualization' && (
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Select Visualization Tool</label>
+              <div className="grid grid-cols-3 gap-4">
+                <div 
+                  className={`border rounded-lg p-4 cursor-pointer ${deliveryConfig.visualizationTool === 'power_bi' ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-300'}`}
+                  onClick={() => setDeliveryConfig({...deliveryConfig, visualizationTool: 'power_bi'})}
+                >
+                  <div className="flex justify-center mb-2">
+                    <svg className="h-8 w-8 text-purple-600" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M21,3H3C1.9,3,1,3.9,1,5v14c0,1.1,0.9,2,2,2h18c1.1,0,2-0.9,2-2V5C23,3.9,22.1,3,21,3z M7.5,18C5.6,18,4,16.4,4,14.5S5.6,11,7.5,11S11,12.6,11,14.5S9.4,18,7.5,18z M11,10H4V6h7V10z M21,14h-7v-2h7V14z M21,10h-7V6h7V10z"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-center font-medium">Power BI</h3>
+                  <p className="text-xs text-center text-gray-500 mt-1">Microsoft's analytics platform</p>
+                </div>
+                
+                <div 
+                  className={`border rounded-lg p-4 cursor-pointer ${deliveryConfig.visualizationTool === 'tableau' ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-300'}`}
+                  onClick={() => setDeliveryConfig({...deliveryConfig, visualizationTool: 'tableau'})}
+                >
+                  <div className="flex justify-center mb-2">
+                    <svg className="h-8 w-8 text-purple-600" viewBox="0 0 24 24" fill="currentColor">
+                      <rect x="3" y="3" width="7" height="7"/>
+                      <rect x="14" y="3" width="7" height="7"/>
+                      <rect x="3" y="14" width="7" height="7"/>
+                      <rect x="14" y="14" width="7" height="7"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-center font-medium">Tableau</h3>
+                  <p className="text-xs text-center text-gray-500 mt-1">Salesforce's visual analytics</p>
+                </div>
+                
+                <div 
+                  className={`border rounded-lg p-4 cursor-pointer ${deliveryConfig.visualizationTool === 'looker' ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-300'}`}
+                  onClick={() => setDeliveryConfig({...deliveryConfig, visualizationTool: 'looker'})}
+                >
+                  <div className="flex justify-center mb-2">
+                    <svg className="h-8 w-8 text-purple-600" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-center font-medium">Looker</h3>
+                  <p className="text-xs text-center text-gray-500 mt-1">Google's BI platform</p>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
+          
+          {/* Format Options (hide when visualization is selected) */}
+          {deliveryConfig.mechanism !== 'visualization' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Output Format</label>
+              <div className="flex space-x-4">
+                <button 
+                  className={`px-4 py-2 rounded ${deliveryConfig.format === 'json' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  onClick={() => setDeliveryConfig({...deliveryConfig, format: 'json'})}
+                >
+                  JSON
+                </button>
+                <button 
+                  className={`px-4 py-2 rounded ${deliveryConfig.format === 'csv' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  onClick={() => setDeliveryConfig({...deliveryConfig, format: 'csv'})}
+                >
+                  CSV
+                </button>
+                <button 
+                  className={`px-4 py-2 rounded ${deliveryConfig.format === 'xml' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  onClick={() => setDeliveryConfig({...deliveryConfig, format: 'xml'})}
+                >
+                  XML
+                </button>
+                <button 
+                  className={`px-4 py-2 rounded ${deliveryConfig.format === 'parquet' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  onClick={() => setDeliveryConfig({...deliveryConfig, format: 'parquet'})}
+                >
+                  Parquet
+                </button>
+              </div>
+            </div>
+          )}
           
           {/* Refresh Frequency */}
           <div>
@@ -576,7 +646,7 @@ LIMIT 100`;
             <button
               className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 flex items-center justify-center w-full"
               onClick={handleCreateContract}
-              disabled={isProcessing}
+              disabled={isProcessing || (deliveryConfig.mechanism === 'visualization' && !deliveryConfig.visualizationTool)}
             >
               {isProcessing ? (
                 <>
@@ -690,12 +760,23 @@ LIMIT 100`;
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <div className="text-sm text-gray-500">Mechanism</div>
-                  <div className="font-medium text-gray-900 mt-1 capitalize">{deliveryConfig.mechanism}</div>
+                  <div className="font-medium text-gray-900 mt-1 capitalize">
+                    {deliveryConfig.mechanism === 'visualization' ? 'Visualisation Tools' : deliveryConfig.mechanism}
+                  </div>
                 </div>
-                <div>
-                  <div className="text-sm text-gray-500">Format</div>
-                  <div className="font-medium text-gray-900 mt-1 uppercase">{deliveryConfig.format}</div>
-                </div>
+                {deliveryConfig.mechanism === 'visualization' ? (
+                  <div>
+                    <div className="text-sm text-gray-500">Tool</div>
+                    <div className="font-medium text-gray-900 mt-1 capitalize">
+                      {deliveryConfig.visualizationTool.replace('_', ' ')}
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="text-sm text-gray-500">Format</div>
+                    <div className="font-medium text-gray-900 mt-1 uppercase">{deliveryConfig.format}</div>
+                  </div>
+                )}
                 <div>
                   <div className="text-sm text-gray-500">Frequency</div>
                   <div className="font-medium text-gray-900 mt-1 capitalize">{deliveryConfig.frequency}</div>
@@ -813,6 +894,74 @@ ${derivedColumns.map(col => `      ${col.name}`).join('\n')}
                   <code className="break-all">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6X7kNHW/aT1so/GkrMjv6YdsknI1aA9sjkBIwCmg0Y6BQHcVmPOLQM+7IFPGA7lqF0JgX7ReSWRq7r1D3dX5J0Jgn4iVWv/5VRZj9sTgNh/Bzv6wH8jKbW0H/MXuT/EFu7Ibvi88CyjKfOEYjrxlpH+Q3fDW4xEFYGla/Lb2U49CFxRPXnDlGUZxSsABbdVFgTGEF/DnJcCpFc0BI4LdDbR+7nJITZ+F9p1k6XrQqL5MPREQftB2a+qgKnDRSKWLxVXPz3SvjOw3EERPXX6p5XTW4dQzKUHjyqT4CUYVFJNxS/XJ...</code>
                 </div>
               </div>
+            </div>
+          )}
+          
+          {/* New Access Instructions for Visualization Tools */}
+          {deliveryConfig.mechanism === 'visualization' && (
+            <div>
+              <div className="mb-4">
+                <h4 className="font-medium text-gray-900 mb-2">Visualization Connection Details</h4>
+                <div className="bg-white p-3 rounded border border-gray-200">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <div className="text-sm text-gray-500">Connection Name</div>
+                      <div className="font-medium text-gray-900 mt-1">NL-Query-{contractId}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Connection Type</div>
+                      <div className="font-medium text-gray-900 mt-1">Direct Query</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Connection String</h4>
+                <div className="bg-gray-800 text-green-400 p-3 rounded text-sm overflow-x-auto relative">
+                  <code>{`Server=data-hub.enterprise.com;Database=${contractId};Auth=OAuth;ClientId=viz_client;`}</code>
+                  <button className="absolute right-2 top-2 text-white hover:text-gray-200">
+                    <Copy className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+              
+              {deliveryConfig.visualizationTool === 'power_bi' && (
+                <div className="mt-4">
+                  <h4 className="font-medium text-gray-900 mb-2">Power BI Connection Steps</h4>
+                  <ol className="list-decimal pl-5 space-y-2 text-sm text-gray-700">
+                    <li>Open Power BI Desktop</li>
+                    <li>Click "Get Data" → "Database" → "SQL Server"</li>
+                    <li>Paste the connection string above</li>
+                    <li>Select "DirectQuery" mode</li>
+                    <li>Use OAuth authentication when prompted</li>
+                  </ol>
+                </div>
+              )}
+              
+              {deliveryConfig.visualizationTool === 'tableau' && (
+                <div className="mt-4">
+                  <h4 className="font-medium text-gray-900 mb-2">Tableau Connection Steps</h4>
+                  <ol className="list-decimal pl-5 space-y-2 text-sm text-gray-700">
+                    <li>Open Tableau Desktop</li>
+                    <li>Under "Connect" → "To a Server" → "SQL Server"</li>
+                    <li>Enter connection details from above</li>
+                    <li>Select "Use OAuth" authentication method</li>
+                  </ol>
+                </div>
+              )}
+              
+              {deliveryConfig.visualizationTool === 'looker' && (
+                <div className="mt-4">
+                  <h4 className="font-medium text-gray-900 mb-2">Looker Connection Steps</h4>
+                  <ol className="list-decimal pl-5 space-y-2 text-sm text-gray-700">
+                    <li>Contact your Looker admin to add this connection</li>
+                    <li>Provide them with the connection details above</li>
+                    <li>Once added, create a new LookML model using this connection</li>
+                    <li>Explore your data using the Looker interface</li>
+                  </ol>
+                </div>
+              )}
             </div>
           )}
         </div>
