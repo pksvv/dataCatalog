@@ -333,7 +333,7 @@ const TraditionalContractFlow = () => {
           {/* Delivery Mechanism */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Delivery Mechanism</label>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-3 gap-4 mb-4">
               <div 
                 className={`border rounded-lg p-4 cursor-pointer ${deliveryConfig.mechanism === 'api' ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-blue-300'}`}
                 onClick={() => setDeliveryConfig({...deliveryConfig, mechanism: 'api', visualizationTool: null})}
@@ -374,8 +374,27 @@ const TraditionalContractFlow = () => {
                 <h3 className="text-center font-medium">GraphQL</h3>
                 <p className="text-xs text-center text-gray-500 mt-1">Flexible querying with GraphQL schema</p>
               </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              {/* Pub/Sub Messaging */}
+              <div 
+                className={`border rounded-lg p-4 cursor-pointer ${deliveryConfig.mechanism === 'pubsub' ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-blue-300'}`}
+                onClick={() => setDeliveryConfig({...deliveryConfig, mechanism: 'pubsub', visualizationTool: null})}
+              >
+                <div className="flex justify-center mb-2">
+                  <svg className="h-8 w-8 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    <path d="M8 10h.01"/>
+                    <path d="M12 10h.01"/>
+                    <path d="M16 10h.01"/>
+                  </svg>
+                </div>
+                <h3 className="text-center font-medium">Pub/Sub Messaging</h3>
+                <p className="text-xs text-center text-gray-500 mt-1">Real-time event-driven data streaming</p>
+              </div>
               
-              {/* New Visualization Tools Button */}
+              {/* Visualization Tools Button */}
               <div 
                 className={`border rounded-lg p-4 cursor-pointer ${deliveryConfig.mechanism === 'visualization' ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-blue-300'}`}
                 onClick={() => setDeliveryConfig({...deliveryConfig, mechanism: 'visualization', visualizationTool: null})}
@@ -440,8 +459,8 @@ const TraditionalContractFlow = () => {
             </div>
           )}
           
-          {/* Only show Format Options if not using visualization tools */}
-          {deliveryConfig.mechanism !== 'visualization' && (
+          {/* Only show Format Options if not using visualization tools or pub/sub */}
+          {deliveryConfig.mechanism !== 'visualization' && deliveryConfig.mechanism !== 'pubsub' && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Output Format</label>
               <div className="flex space-x-4">
@@ -473,8 +492,8 @@ const TraditionalContractFlow = () => {
             </div>
           )}
           
-          {/* Only show Refresh Frequency if not using visualization tools */}
-          {deliveryConfig.mechanism !== 'visualization' && (
+          {/* Only show Refresh Frequency if not using visualization tools or pub/sub */}
+          {deliveryConfig.mechanism !== 'visualization' && deliveryConfig.mechanism !== 'pubsub' && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Refresh Frequency</label>
               <div className="grid grid-cols-4 gap-4">
@@ -529,6 +548,88 @@ const TraditionalContractFlow = () => {
               </div>
             </div>
           )}
+          
+          {deliveryConfig.mechanism === 'pubsub' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Pub/Sub Configuration</label>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Message Broker</label>
+                  <select className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option>Apache Kafka</option>
+                    <option>Azure Service Bus</option>
+                    <option>AWS SQS/SNS</option>
+                    <option>Google Pub/Sub</option>
+                    <option>RabbitMQ</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Topic/Queue Name</label>
+                  <input 
+                    type="text" 
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                    placeholder="data-product-updates"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Message Format</label>
+                  <select className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option>JSON</option>
+                    <option>Avro</option>
+                    <option>Protobuf</option>
+                    <option>XML</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Delivery Guarantee</label>
+                  <select className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option>At Least Once</option>
+                    <option>At Most Once</option>
+                    <option>Exactly Once</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div className="mt-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                <h3 className="font-medium text-gray-800 mb-2">Pub/Sub Event Configuration</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1">Trigger Events</label>
+                    <div className="space-y-2">
+                      <label className="flex items-center">
+                        <input type="checkbox" className="mr-2" defaultChecked />
+                        <span className="text-sm">Data Updates</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" className="mr-2" defaultChecked />
+                        <span className="text-sm">Schema Changes</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" className="mr-2" />
+                        <span className="text-sm">Quality Alerts</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1">Batch Size</label>
+                    <input 
+                      type="number" 
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                      placeholder="1000"
+                      defaultValue="1000"
+                    />
+                    <label className="block text-xs text-gray-500 mb-1 mt-2">Max Wait Time (seconds)</label>
+                    <input 
+                      type="number" 
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                      placeholder="30"
+                      defaultValue="30"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Additional config details based on mechanism selected */}
           {deliveryConfig.mechanism === 'api' && (
@@ -567,6 +668,32 @@ const TraditionalContractFlow = () => {
 
 type ${selectedProduct ? selectedProduct.name.replace(/\s+/g, '') : 'Product'} {
 ${selectedColumns.map(col => `  ${col.name}: ${col.type === 'string' ? 'String' : col.type === 'number' ? 'Float' : 'String'}!`).join('\n')}
+}`}
+              </pre>
+            </div>
+          )}
+
+          {deliveryConfig.mechanism === 'pubsub' && (
+            <div className="border p-4 rounded-lg bg-gray-50">
+              <h3 className="font-medium text-gray-800 mb-2">Pub/Sub Message Preview</h3>
+              <p className="text-sm text-gray-600 mb-2">
+                Here's a sample of the message format you'll receive:
+              </p>
+              <pre className="bg-gray-800 text-green-400 p-3 rounded text-sm overflow-x-auto">
+{`{
+  "eventType": "data_update",
+  "timestamp": "2025-05-25T10:30:00Z",
+  "contractId": "sample-contract-id",
+  "dataProduct": "${selectedProduct ? selectedProduct.name : 'Product Name'}",
+  "messageId": "msg-12345-abcde",
+  "payload": {
+${selectedColumns.map(col => `    "${col.name}": "sample_value"`).join(',\n')}
+  },
+  "metadata": {
+    "source": "data-platform",
+    "version": "1.0",
+    "batchSize": 1000
+  }
 }`}
               </pre>
             </div>
@@ -673,6 +800,8 @@ ${selectedColumns.map(col => `  ${col.name}: ${col.type === 'string' ? 'String' 
                   <div className="font-medium text-gray-900 mt-1 capitalize">
                     {deliveryConfig.mechanism === 'visualization' 
                       ? 'Visualization Tools' 
+                      : deliveryConfig.mechanism === 'pubsub'
+                      ? 'Pub/Sub Messaging'
                       : deliveryConfig.mechanism}
                   </div>
                 </div>
@@ -687,6 +816,11 @@ ${selectedColumns.map(col => `  ${col.name}: ${col.type === 'string' ? 'String' 
                       {deliveryConfig.visualizationTool === 'quicksight' && 'QuickSight'}
                     </div>
                   </div>
+                ) : deliveryConfig.mechanism === 'pubsub' ? (
+                  <div>
+                    <div className="text-sm text-gray-500">Broker</div>
+                    <div className="font-medium text-gray-900 mt-1">Apache Kafka</div>
+                  </div>
                 ) : (
                   <div>
                     <div className="text-sm text-gray-500">Format</div>
@@ -694,7 +828,7 @@ ${selectedColumns.map(col => `  ${col.name}: ${col.type === 'string' ? 'String' 
                   </div>
                 )}
                 
-                {deliveryConfig.mechanism !== 'visualization' && (
+                {deliveryConfig.mechanism !== 'visualization' && deliveryConfig.mechanism !== 'pubsub' && (
                   <div>
                     <div className="text-sm text-gray-500">Frequency</div>
                     <div className="font-medium text-gray-900 mt-1 capitalize">{deliveryConfig.frequency}</div>
@@ -705,6 +839,13 @@ ${selectedColumns.map(col => `  ${col.name}: ${col.type === 'string' ? 'String' 
                   <div>
                     <div className="text-sm text-gray-500">Connection</div>
                     <div className="font-medium text-gray-900 mt-1">Direct Connection</div>
+                  </div>
+                )}
+
+                {deliveryConfig.mechanism === 'pubsub' && (
+                  <div>
+                    <div className="text-sm text-gray-500">Message Format</div>
+                    <div className="font-medium text-gray-900 mt-1">JSON</div>
                   </div>
                 )}
               </div>
@@ -816,6 +957,110 @@ ${selectedColumns.map(col => `    ${col.name}`).join('\n')}
                 <h4 className="font-medium text-gray-900 mb-2">SSH Public Key</h4>
                 <div className="bg-gray-800 text-green-400 p-3 rounded text-sm overflow-x-auto">
                   <code className="break-all">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6X7kNHW/aT1so/GkrMjv6YdsknI1aA9sjkBIwCmg0Y6BQHcVmPOLQM+7IFPGA7lqF0JgX7ReSWRq7r1D3dX5J0Jgn4iVWv/5VRZj9sTgNh/Bzv6wH8jKbW0H/MXuT/EFu7Ibvi88CyjKfOEYjrxlpH+Q3fDW4xEFYGla/Lb2U49CFxRPXnDlGUZxSsABbdVFgTGEF/DnJcCpFc0BI4LdDbR+7nJITZ+F9p1k6XrQqL5MPREQftB2a+qgKnDRSKWLxVXPz3SvjOw3EERPXX6p5XTW4dQzKUHjyqT4CUYVFJNxS/XJ...</code>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {deliveryConfig.mechanism === 'pubsub' && (
+            <div>
+              <div className="mb-4">
+                <h4 className="font-medium text-gray-900 mb-2">Pub/Sub Connection Details</h4>
+                <div className="bg-white p-3 rounded border border-gray-200">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <div className="text-sm text-gray-500">Topic Name</div>
+                      <div className="font-medium text-gray-900 mt-1">data-product-{contractId}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Message Broker</div>
+                      <div className="font-medium text-gray-900 mt-1">Apache Kafka</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Subscription ID</div>
+                      <div className="relative mt-1">
+                        <input 
+                          type="text" 
+                          value={`sub-${contractId}`} 
+                          className="w-full pr-10 px-3 py-2 border border-gray-300 rounded" 
+                          readOnly 
+                        />
+                        <button className="absolute right-2 top-2 text-blue-600 hover:text-blue-800">
+                          <Copy className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Access Token</div>
+                      <div className="relative mt-1">
+                        <input 
+                          type="text" 
+                          value="••••••••••••••••••••••••••" 
+                          className="w-full pr-10 px-3 py-2 border border-gray-300 rounded bg-gray-50" 
+                          readOnly 
+                        />
+                        <button className="absolute right-2 top-2 text-blue-600 hover:text-blue-800">
+                          <Copy className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mb-4">
+                <h4 className="font-medium text-gray-900 mb-2">Message Schema</h4>
+                <div className="bg-gray-800 text-green-400 p-3 rounded text-sm overflow-x-auto">
+{`{
+  "eventType": "data_update",
+  "timestamp": "2025-05-25T10:30:00Z",
+  "contractId": "${contractId}",
+  "dataProduct": "${selectedProduct.name}",
+  "payload": {
+${selectedColumns.map(col => `    "${col.name}": "value"`).join(',\n')}
+  },
+  "metadata": {
+    "source": "data-platform",
+    "version": "1.0",
+    "batchSize": 1000
+  }
+}`}
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Consumer Setup Instructions</h4>
+                <div className="bg-white p-4 rounded border border-gray-200">
+                  <ol className="list-decimal list-inside space-y-2 text-sm text-gray-700">
+                    <li>Configure your Kafka consumer with the provided topic name</li>
+                    <li>Use the subscription ID for tracking consumption progress</li>
+                    <li>Authenticate using the provided access token</li>
+                    <li>Process incoming messages according to the schema above</li>
+                    <li>Implement proper error handling and acknowledgment</li>
+                  </ol>
+                  
+                  <div className="mt-4">
+                    <div className="bg-gray-800 text-green-400 p-3 rounded text-sm overflow-x-auto">
+{`from kafka import KafkaConsumer
+import json
+
+consumer = KafkaConsumer(
+    'data-product-${contractId}',
+    bootstrap_servers=['kafka.enterprise.com:9092'],
+    security_protocol='SASL_SSL',
+    sasl_mechanism='PLAIN',
+    sasl_plain_username='${contractId}',
+    sasl_plain_password='YOUR_ACCESS_TOKEN',
+    value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+)
+
+for message in consumer:
+    data = message.value
+    print(f"Received: {data['eventType']} at {data['timestamp']}")
+    # Process your data here
+    process_data(data['payload'])`}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

@@ -10,12 +10,26 @@ const GenAIInterface = () => {
   const [derivedColumns, setDerivedColumns] = useState([]);
   const [error, setError] = useState('');
   
-  // State for contract configuration with added visualizationTool
+  // State for contract configuration with added visualizationTool and pubsub config
   const [deliveryConfig, setDeliveryConfig] = useState({
     mechanism: 'api',
     format: 'json',
     frequency: 'daily',
-    visualizationTool: '' // New property for visualization tool
+    visualizationTool: '', // For visualization tools
+    // Pub/Sub specific configuration
+    pubsubConfig: {
+      broker: 'apache_kafka',
+      topicName: 'data-product-updates',
+      messageFormat: 'json',
+      deliveryGuarantee: 'at_least_once',
+      triggerEvents: {
+        dataUpdates: true,
+        schemaChanges: true,
+        qualityAlerts: false
+      },
+      batchSize: 1000,
+      maxWaitTime: 30
+    }
   });
   
   // State for tracking creation progress
@@ -463,7 +477,7 @@ LIMIT 100`;
           {/* Delivery Mechanism */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Delivery Mechanism</label>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-5 gap-4">
               <div 
                 className={`border rounded-lg p-4 cursor-pointer ${deliveryConfig.mechanism === 'api' ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-300'}`}
                 onClick={() => setDeliveryConfig({...deliveryConfig, mechanism: 'api'})}
@@ -505,7 +519,27 @@ LIMIT 100`;
                 <p className="text-xs text-center text-gray-500 mt-1">Flexible querying with GraphQL schema</p>
               </div>
               
-              {/* New Visualisation Tools button */}
+              {/* Pub/Sub Messaging */}
+              <div 
+                className={`border rounded-lg p-4 cursor-pointer ${deliveryConfig.mechanism === 'pubsub' ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-300'}`}
+                onClick={() => setDeliveryConfig({...deliveryConfig, mechanism: 'pubsub'})}
+              >
+                <div className="flex justify-center mb-2">
+                  <svg className="h-8 w-8 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 12l2 2 4-4"></path>
+                    <path d="M21 12c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z"></path>
+                    <path d="M3 12c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z"></path>
+                    <path d="M12 21c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z"></path>
+                    <path d="M12 3c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z"></path>
+                    <path d="M9 21l1.5-1.5L9 18l-1.5 1.5L9 21z"></path>
+                    <path d="M15 3l1.5 1.5L15 6l-1.5-1.5L15 3z"></path>
+                  </svg>
+                </div>
+                <h3 className="text-center font-medium">Pub/Sub Messaging</h3>
+                <p className="text-xs text-center text-gray-500 mt-1">Real-time event-driven data streaming</p>
+              </div>
+              
+              {/* Visualisation Tools button */}
               <div 
                 className={`border rounded-lg p-4 cursor-pointer ${deliveryConfig.mechanism === 'visualization' ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-300'}`}
                 onClick={() => setDeliveryConfig({...deliveryConfig, mechanism: 'visualization', visualizationTool: ''})}
@@ -522,6 +556,162 @@ LIMIT 100`;
               </div>
             </div>
           </div>
+          
+          {/* Pub/Sub Configuration (only shows when pubsub is selected) */}
+          {deliveryConfig.mechanism === 'pubsub' && (
+            <div className="space-y-6">
+              {/* Message Broker Selection */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Message Broker</label>
+                <div className="grid grid-cols-3 gap-4">
+                  <div 
+                    className={`border rounded-lg p-3 cursor-pointer ${deliveryConfig.pubsubConfig.broker === 'apache_kafka' ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-300'}`}
+                    onClick={() => setDeliveryConfig({...deliveryConfig, pubsubConfig: {...deliveryConfig.pubsubConfig, broker: 'apache_kafka'}})}
+                  >
+                    <div className="flex justify-center mb-2">
+                      <Server className="h-6 w-6 text-purple-600" />
+                    </div>
+                    <h4 className="text-center font-medium text-sm">Apache Kafka</h4>
+                  </div>
+                  
+                  <div 
+                    className={`border rounded-lg p-3 cursor-pointer ${deliveryConfig.pubsubConfig.broker === 'rabbitmq' ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-300'}`}
+                    onClick={() => setDeliveryConfig({...deliveryConfig, pubsubConfig: {...deliveryConfig.pubsubConfig, broker: 'rabbitmq'}})}
+                  >
+                    <div className="flex justify-center mb-2">
+                      <Database className="h-6 w-6 text-purple-600" />
+                    </div>
+                    <h4 className="text-center font-medium text-sm">RabbitMQ</h4>
+                  </div>
+                  
+                  <div 
+                    className={`border rounded-lg p-3 cursor-pointer ${deliveryConfig.pubsubConfig.broker === 'azure_service_bus' ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-300'}`}
+                    onClick={() => setDeliveryConfig({...deliveryConfig, pubsubConfig: {...deliveryConfig.pubsubConfig, broker: 'azure_service_bus'}})}
+                  >
+                    <div className="flex justify-center mb-2">
+                      <svg className="h-6 w-6 text-purple-600" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.568 8.16l-5.12 5.12a.8.8 0 01-1.136 0l-2.56-2.56a.8.8 0 111.136-1.136L12 11.696l4.432-4.432a.8.8 0 111.136 1.136z"/>
+                      </svg>
+                    </div>
+                    <h4 className="text-center font-medium text-sm">Azure Service Bus</h4>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Topic/Queue Configuration */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Topic/Queue Name</label>
+                  <input
+                    type="text"
+                    value={deliveryConfig.pubsubConfig.topicName}
+                    onChange={(e) => setDeliveryConfig({...deliveryConfig, pubsubConfig: {...deliveryConfig.pubsubConfig, topicName: e.target.value}})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    placeholder="data-product-updates"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Message Format</label>
+                  <select
+                    value={deliveryConfig.pubsubConfig.messageFormat}
+                    onChange={(e) => setDeliveryConfig({...deliveryConfig, pubsubConfig: {...deliveryConfig.pubsubConfig, messageFormat: e.target.value}})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  >
+                    <option value="json">JSON</option>
+                    <option value="avro">Avro</option>
+                    <option value="protobuf">Protocol Buffers</option>
+                  </select>
+                </div>
+              </div>
+              
+              {/* Delivery Guarantee */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Delivery Guarantee</label>
+                <div className="grid grid-cols-3 gap-4">
+                  <button
+                    className={`px-4 py-2 rounded-lg text-sm ${deliveryConfig.pubsubConfig.deliveryGuarantee === 'at_most_once' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                    onClick={() => setDeliveryConfig({...deliveryConfig, pubsubConfig: {...deliveryConfig.pubsubConfig, deliveryGuarantee: 'at_most_once'}})}
+                  >
+                    At Most Once
+                  </button>
+                  <button
+                    className={`px-4 py-2 rounded-lg text-sm ${deliveryConfig.pubsubConfig.deliveryGuarantee === 'at_least_once' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                    onClick={() => setDeliveryConfig({...deliveryConfig, pubsubConfig: {...deliveryConfig.pubsubConfig, deliveryGuarantee: 'at_least_once'}})}
+                  >
+                    At Least Once
+                  </button>
+                  <button
+                    className={`px-4 py-2 rounded-lg text-sm ${deliveryConfig.pubsubConfig.deliveryGuarantee === 'exactly_once' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                    onClick={() => setDeliveryConfig({...deliveryConfig, pubsubConfig: {...deliveryConfig.pubsubConfig, deliveryGuarantee: 'exactly_once'}})}
+                  >
+                    Exactly Once
+                  </button>
+                </div>
+              </div>
+              
+              {/* Trigger Events */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Trigger Events</label>
+                <div className="space-y-2">
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={deliveryConfig.pubsubConfig.triggerEvents.dataUpdates}
+                      onChange={(e) => setDeliveryConfig({...deliveryConfig, pubsubConfig: {...deliveryConfig.pubsubConfig, triggerEvents: {...deliveryConfig.pubsubConfig.triggerEvents, dataUpdates: e.target.checked}}})}
+                      className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                    />
+                    <span className="ml-2 text-sm text-gray-700">Data Updates</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={deliveryConfig.pubsubConfig.triggerEvents.schemaChanges}
+                      onChange={(e) => setDeliveryConfig({...deliveryConfig, pubsubConfig: {...deliveryConfig.pubsubConfig, triggerEvents: {...deliveryConfig.pubsubConfig.triggerEvents, schemaChanges: e.target.checked}}})}
+                      className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                    />
+                    <span className="ml-2 text-sm text-gray-700">Schema Changes</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={deliveryConfig.pubsubConfig.triggerEvents.qualityAlerts}
+                      onChange={(e) => setDeliveryConfig({...deliveryConfig, pubsubConfig: {...deliveryConfig.pubsubConfig, triggerEvents: {...deliveryConfig.pubsubConfig.triggerEvents, qualityAlerts: e.target.checked}}})}
+                      className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                    />
+                    <span className="ml-2 text-sm text-gray-700">Quality Alerts</span>
+                  </label>
+                </div>
+              </div>
+              
+              {/* Batch Configuration */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Batch Size</label>
+                  <input
+                    type="number"
+                    value={deliveryConfig.pubsubConfig.batchSize}
+                    onChange={(e) => setDeliveryConfig({...deliveryConfig, pubsubConfig: {...deliveryConfig.pubsubConfig, batchSize: parseInt(e.target.value)}})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    min="1"
+                    max="10000"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Max Wait Time (seconds)</label>
+                  <input
+                    type="number"
+                    value={deliveryConfig.pubsubConfig.maxWaitTime}
+                    onChange={(e) => setDeliveryConfig({...deliveryConfig, pubsubConfig: {...deliveryConfig.pubsubConfig, maxWaitTime: parseInt(e.target.value)}})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    min="1"
+                    max="300"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
           
           {/* Visualization Tool Selection (only shows when visualization is selected) */}
           {deliveryConfig.mechanism === 'visualization' && (
@@ -574,8 +764,8 @@ LIMIT 100`;
             </div>
           )}
           
-          {/* Format Options (hide when visualization is selected) */}
-          {deliveryConfig.mechanism !== 'visualization' && (
+          {/* Format Options (hide when visualization or pubsub is selected) */}
+          {deliveryConfig.mechanism !== 'visualization' && deliveryConfig.mechanism !== 'pubsub' && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Output Format</label>
               <div className="flex space-x-4">
@@ -607,40 +797,42 @@ LIMIT 100`;
             </div>
           )}
           
-          {/* Refresh Frequency */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Refresh Frequency</label>
-            <div className="grid grid-cols-4 gap-4">
-              <button 
-                className={`px-4 py-2 rounded-lg flex flex-col items-center ${deliveryConfig.frequency === 'realtime' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                onClick={() => setDeliveryConfig({...deliveryConfig, frequency: 'realtime'})}
-              >
-                <span className="text-sm font-medium">Real-time</span>
-                <span className="text-xs mt-1">Live updates</span>
-              </button>
-              <button 
-                className={`px-4 py-2 rounded-lg flex flex-col items-center ${deliveryConfig.frequency === 'daily' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                onClick={() => setDeliveryConfig({...deliveryConfig, frequency: 'daily'})}
-              >
-                <span className="text-sm font-medium">Daily</span>
-                <span className="text-xs mt-1">Once per day</span>
-              </button>
-              <button 
-                className={`px-4 py-2 rounded-lg flex flex-col items-center ${deliveryConfig.frequency === 'weekly' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                onClick={() => setDeliveryConfig({...deliveryConfig, frequency: 'weekly'})}
-              >
-                <span className="text-sm font-medium">Weekly</span>
-                <span className="text-xs mt-1">Once per week</span>
-              </button>
-              <button 
-                className={`px-4 py-2 rounded-lg flex flex-col items-center ${deliveryConfig.frequency === 'monthly' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                onClick={() => setDeliveryConfig({...deliveryConfig, frequency: 'monthly'})}
-              >
-                <span className="text-sm font-medium">Monthly</span>
-                <span className="text-xs mt-1">Once per month</span>
-              </button>
+          {/* Refresh Frequency (hide when pubsub is selected since it's real-time) */}
+          {deliveryConfig.mechanism !== 'pubsub' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Refresh Frequency</label>
+              <div className="grid grid-cols-4 gap-4">
+                <button 
+                  className={`px-4 py-2 rounded-lg flex flex-col items-center ${deliveryConfig.frequency === 'realtime' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  onClick={() => setDeliveryConfig({...deliveryConfig, frequency: 'realtime'})}
+                >
+                  <span className="text-sm font-medium">Real-time</span>
+                  <span className="text-xs mt-1">Live updates</span>
+                </button>
+                <button 
+                  className={`px-4 py-2 rounded-lg flex flex-col items-center ${deliveryConfig.frequency === 'daily' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  onClick={() => setDeliveryConfig({...deliveryConfig, frequency: 'daily'})}
+                >
+                  <span className="text-sm font-medium">Daily</span>
+                  <span className="text-xs mt-1">Once per day</span>
+                </button>
+                <button 
+                  className={`px-4 py-2 rounded-lg flex flex-col items-center ${deliveryConfig.frequency === 'weekly' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  onClick={() => setDeliveryConfig({...deliveryConfig, frequency: 'weekly'})}
+                >
+                  <span className="text-sm font-medium">Weekly</span>
+                  <span className="text-xs mt-1">Once per week</span>
+                </button>
+                <button 
+                  className={`px-4 py-2 rounded-lg flex flex-col items-center ${deliveryConfig.frequency === 'monthly' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  onClick={() => setDeliveryConfig({...deliveryConfig, frequency: 'monthly'})}
+                >
+                  <span className="text-sm font-medium">Monthly</span>
+                  <span className="text-xs mt-1">Once per month</span>
+                </button>
+              </div>
             </div>
-          </div>
+          )}
           
           <div className="mt-4">
             <button
@@ -761,7 +953,9 @@ LIMIT 100`;
                 <div>
                   <div className="text-sm text-gray-500">Mechanism</div>
                   <div className="font-medium text-gray-900 mt-1 capitalize">
-                    {deliveryConfig.mechanism === 'visualization' ? 'Visualisation Tools' : deliveryConfig.mechanism}
+                    {deliveryConfig.mechanism === 'visualization' ? 'Visualisation Tools' : 
+                     deliveryConfig.mechanism === 'pubsub' ? 'Pub/Sub Messaging' : 
+                     deliveryConfig.mechanism}
                   </div>
                 </div>
                 {deliveryConfig.mechanism === 'visualization' ? (
@@ -769,6 +963,13 @@ LIMIT 100`;
                     <div className="text-sm text-gray-500">Tool</div>
                     <div className="font-medium text-gray-900 mt-1 capitalize">
                       {deliveryConfig.visualizationTool.replace('_', ' ')}
+                    </div>
+                  </div>
+                ) : deliveryConfig.mechanism === 'pubsub' ? (
+                  <div>
+                    <div className="text-sm text-gray-500">Broker</div>
+                    <div className="font-medium text-gray-900 mt-1 capitalize">
+                      {deliveryConfig.pubsubConfig.broker.replace('_', ' ')}
                     </div>
                   </div>
                 ) : (
@@ -779,7 +980,9 @@ LIMIT 100`;
                 )}
                 <div>
                   <div className="text-sm text-gray-500">Frequency</div>
-                  <div className="font-medium text-gray-900 mt-1 capitalize">{deliveryConfig.frequency}</div>
+                  <div className="font-medium text-gray-900 mt-1 capitalize">
+                    {deliveryConfig.mechanism === 'pubsub' ? 'Real-time' : deliveryConfig.frequency}
+                  </div>
                 </div>
               </div>
             </div>
@@ -897,7 +1100,126 @@ ${derivedColumns.map(col => `      ${col.name}`).join('\n')}
             </div>
           )}
           
-          {/* New Access Instructions for Visualization Tools */}
+          {/* Pub/Sub Access Instructions */}
+          {deliveryConfig.mechanism === 'pubsub' && (
+            <div>
+              <div className="mb-4">
+                <h4 className="font-medium text-gray-900 mb-2">Pub/Sub Connection Details</h4>
+                <div className="bg-white p-3 rounded border border-gray-200">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <div className="text-sm text-gray-500">Topic Name</div>
+                      <div className="relative mt-1">
+                        <input 
+                          type="text" 
+                          value={`data-product-${contractId}`}
+                          className="w-full pr-10 px-3 py-2 border border-gray-300 rounded bg-gray-50" 
+                          readOnly 
+                        />
+                        <button className="absolute right-2 top-2 text-purple-600 hover:text-purple-800">
+                          <Copy className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Message Broker</div>
+                      <div className="font-medium text-gray-900 mt-1 capitalize">
+                        {deliveryConfig.pubsubConfig.broker.replace('_', ' ')}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Subscription ID</div>
+                      <div className="relative mt-1">
+                        <input 
+                          type="text" 
+                          value={`sub-${contractId}`}
+                          className="w-full pr-10 px-3 py-2 border border-gray-300 rounded bg-gray-50" 
+                          readOnly 
+                        />
+                        <button className="absolute right-2 top-2 text-purple-600 hover:text-purple-800">
+                          <Copy className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Access Token</div>
+                      <div className="relative mt-1">
+                        <input 
+                          type="text" 
+                          value="••••••••••••••••••••••••••" 
+                          className="w-full pr-10 px-3 py-2 border border-gray-300 rounded bg-gray-50" 
+                          readOnly 
+                        />
+                        <button className="absolute right-2 top-2 text-purple-600 hover:text-purple-800">
+                          <Copy className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mb-4">
+                <h4 className="font-medium text-gray-900 mb-2">Message Schema</h4>
+                <div className="bg-gray-800 text-green-400 p-3 rounded text-sm overflow-x-auto">
+{`{
+  "eventType": "data_update",
+  "timestamp": "${new Date().toISOString()}",
+  "contractId": "${contractId}",
+  "dataProduct": "Customer 360",
+  "messageId": "msg-12345-abcde",
+  "payload": {
+${derivedColumns.map(col => `    "${col.name}": "value"`).join(',\n')}
+  },
+  "metadata": {
+    "source": "data-platform",
+    "version": "1.0",
+    "batchSize": ${deliveryConfig.pubsubConfig.batchSize}
+  }
+}`}
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Consumer Setup Instructions</h4>
+                <ol className="list-decimal pl-5 space-y-2 text-sm text-gray-700">
+                  <li>Configure your {deliveryConfig.pubsubConfig.broker.replace('_', ' ')} consumer with the provided topic name</li>
+                  <li>Use the subscription ID for tracking consumption progress</li>
+                  <li>Authenticate using the provided access token</li>
+                  <li>Process incoming messages according to the schema above</li>
+                  <li>Implement proper error handling and acknowledgment</li>
+                </ol>
+                
+                {deliveryConfig.pubsubConfig.broker === 'apache_kafka' && (
+                  <div className="mt-4">
+                    <h5 className="font-medium text-gray-900 mb-2">Kafka Consumer Code Sample</h5>
+                    <div className="bg-gray-800 text-green-400 p-3 rounded text-sm overflow-x-auto">
+{`from kafka import KafkaConsumer
+import json
+
+consumer = KafkaConsumer(
+    'data-product-${contractId}',
+    bootstrap_servers=['kafka.enterprise.com:9092'],
+    security_protocol='SASL_SSL',
+    sasl_mechanism='PLAIN',
+    sasl_plain_username='${contractId}',
+    sasl_plain_password='YOUR_ACCESS_TOKEN',
+    value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+)
+
+for message in consumer:
+    data = message.value
+    print(f"Received: {data['eventType']} at {data['timestamp']}")
+    # Process your data here
+    process_data(data['payload'])`}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+          
+          {/* Visualization Tools Access Instructions */}
           {deliveryConfig.mechanism === 'visualization' && (
             <div>
               <div className="mb-4">
