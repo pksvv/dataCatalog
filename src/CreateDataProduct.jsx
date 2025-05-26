@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, Database, Check, Server, FileText, Clock, Settings, Download, Copy, AlertCircle, PieChart, Play, Code, ChevronDown, ChevronUp, Table } from 'lucide-react';
+import { ArrowRight, Database, Check, Server, FileText, Clock, Settings, Download, Copy, AlertCircle, PieChart, Play, Code, ChevronDown, ChevronUp, Table, MessageSquare } from 'lucide-react';
 
 const CreateDataProduct = () => {
   // State management
@@ -13,8 +13,16 @@ const CreateDataProduct = () => {
     mechanism: 'api',
     format: 'json',
     frequency: 'daily',
-    visualizationTool: null
+    visualizationTool: null,
+    pubsubConfig: {
+      enabled: false,
+      topic: '',
+      messageFormat: 'json',
+      realtimeProcessing: false
+    }
   });
+  
+  const [dataFlowType, setDataFlowType] = useState('standard'); // 'standard', 'pubsub'
   const [dataProductName, setDataProductName] = useState('');
   const [dataProductDescription, setDataProductDescription] = useState('');
   const [isQueryExpanded, setIsQueryExpanded] = useState(true);
@@ -72,8 +80,21 @@ const CreateDataProduct = () => {
         { name: "transaction_date", type: "date", sensitivity: "low", description: "Date and time of the transaction" },
         { name: "store_id", type: "string", sensitivity: "low", description: "Identifier of the store where transaction occurred" }
       ]
-    }
-  ];
+    },
+  {
+    id: 4,
+    name: "events",
+    displayName: "Real-time Events Stream",
+    description: "Live user interaction events for pub/sub processing",
+    columns: [
+      { name: "event_id", type: "string", sensitivity: "low", description: "Unique event identifier" },
+      { name: "user_id", type: "string", sensitivity: "medium", description: "User identifier" },
+      { name: "event_type", type: "string", sensitivity: "low", description: "Type of event" },
+      { name: "timestamp", type: "timestamp", sensitivity: "low", description: "Event timestamp" },
+      { name: "properties", type: "json", sensitivity: "medium", description: "Event properties" }
+    ]
+  }
+];
   
   // Sample queries for quick selection
   const sampleQueries = [
@@ -134,8 +155,22 @@ ORDER BY month DESC`
 FROM products p
 WHERE p.current_stock < p.reorder_level
 ORDER BY shortage_quantity DESC`
-    }
-  ];
+    },
+  {
+  name: "Real-time User Events",
+  description: "Stream user interaction events for real-time processing",
+  type: "pubsub",
+  query: `SELECT 
+    event_id,
+    user_id,
+    event_type,
+    timestamp,
+    properties
+FROM events 
+WHERE timestamp >= NOW() - INTERVAL '1 hour'
+ORDER BY timestamp DESC`
+  }
+];
   
   // Helper functions
   const getSensitivityColor = (level) => {
@@ -329,6 +364,34 @@ ORDER BY shortage_quantity DESC`
               className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="Describe what this data product provides"
             />
+          </div>
+        </div>
+
+        {/* Data Flow Type Selection */}
+        <div className="mb-6">
+          <h3 className="text-lg font-medium text-gray-900 mb-3">Data Flow Type</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div 
+              className={`border rounded-lg p-4 cursor-pointer ${dataFlowType === 'standard' ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-300'}`}
+              onClick={() => setDataFlowType('standard')}
+            >
+              <div className="flex justify-center mb-2">
+                <Database className="h-8 w-8 text-purple-600" />
+              </div>
+              <h4 className="text-center font-medium">Standard Flow</h4>
+              <p className="text-xs text-center text-gray-500 mt-1">Traditional API/File delivery</p>
+            </div>
+            
+            <div 
+              className={`border rounded-lg p-4 cursor-pointer ${dataFlowType === 'pubsub' ? 'border-green-500 bg-green-50' : 'border-gray-300 hover:border-green-300'}`}
+              onClick={() => setDataFlowType('pubsub')}
+            >
+              <div className="flex justify-center mb-2">
+                <MessageSquare className="h-8 w-8 text-green-600" />
+              </div>
+              <h4 className="text-center font-medium">Pub/Sub Flow</h4>
+              <p className="text-xs text-center text-gray-500 mt-1">Real-time streaming</p>
+            </div>
           </div>
         </div>
         
@@ -529,7 +592,84 @@ ORDER BY shortage_quantity DESC`
               </div>
             </div>
           </div>
-          
+
+          {/* Pub/Sub Configuration */}
+          {dataFlowType === 'pubsub' && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Pub/Sub Topic Configuration</label>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm text-gray-600 mb-1">Topic Name</label>
+                    <input
+                      type="text"
+                      value={deliveryConfig.pubsubConfig.topic}
+                      onChange={(e) => setDeliveryConfig({
+                        ...deliveryConfig, 
+                        pubsubConfig: {...deliveryConfig.pubsubConfig, topic: e.target.value}
+                      })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                      placeholder="e.g., user-events-stream"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-600 mb-1">Message Format</label>
+                    <select
+                      value={deliveryConfig.pubsubConfig.messageFormat}
+                      onChange={(e) => setDeliveryConfig({
+                        ...deliveryConfig, 
+                        pubsubConfig: {...deliveryConfig.pubsubConfig, messageFormat: e.target.value}
+                      })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                    >
+                      <option value="json">JSON</option>
+                      <option value="avro">Avro</option>
+                      <option value="protobuf">Protocol Buffers</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Pub/Sub Features</label>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="border border-gray-300 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center">
+                        <MessageSquare className="h-5 w-5 text-green-600 mr-2" />
+                        <span className="font-medium">Real-time Processing</span>
+                      </div>
+                      <input 
+                        type="checkbox" 
+                        checked={deliveryConfig.pubsubConfig.realtimeProcessing}
+                        onChange={(e) => setDeliveryConfig({
+                          ...deliveryConfig, 
+                          pubsubConfig: {...deliveryConfig.pubsubConfig, realtimeProcessing: e.target.checked}
+                        })}
+                        className="text-green-600"
+                      />
+                    </div>
+                    <p className="text-xs text-gray-500">Process messages as they arrive</p>
+                  </div>
+                  
+                  <div className="border border-gray-300 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center">
+                        <Clock className="h-5 w-5 text-green-600 mr-2" />
+                        <span className="font-medium">Message Batching</span>
+                      </div>
+                      <input 
+                        type="checkbox" 
+                        className="text-green-600"
+                      />
+                    </div>
+                    <p className="text-xs text-gray-500">Group messages for efficiency</p>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
           {/* Visualization Tool Selection */}
           {deliveryConfig.mechanism === 'visualization' && (
             <div>
@@ -718,43 +858,61 @@ ORDER BY shortage_quantity DESC`
           </div>
           
           <div className="border-t border-gray-200 pt-4">
-            <h4 className="font-medium text-gray-900 mb-2">Delivery Configuration</h4>
+            <h4 className="font-medium text-gray-900 mb-2">
+              {dataFlowType === 'pubsub' ? 'Pub/Sub Configuration' : 'Delivery Configuration'}
+            </h4>
             <div className="bg-white p-3 rounded border border-gray-200">
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <div className="text-sm text-gray-500">Mechanism</div>
-                  <div className="font-medium text-gray-900 mt-1 capitalize">
-                    {deliveryConfig.mechanism === 'visualization' 
-                      ? 'Visualization Tools' 
-                      : deliveryConfig.mechanism}
-                  </div>
-                </div>
-                
-                {deliveryConfig.mechanism === 'visualization' ? (
+              {dataFlowType === 'pubsub' ? (
+                <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <div className="text-sm text-gray-500">Tool</div>
-                    <div className="font-medium text-gray-900 mt-1">
-                      {deliveryConfig.visualizationTool === 'powerbi' && 'Power BI'}
-                      {deliveryConfig.visualizationTool === 'tableau' && 'Tableau'}
-                      {deliveryConfig.visualizationTool === 'looker' && 'Looker'}
-                      {deliveryConfig.visualizationTool === 'quicksight' && 'QuickSight'}
-                    </div>
+                    <div className="text-sm text-gray-500">Topic</div>
+                    <div className="font-medium text-gray-900 mt-1">{deliveryConfig.pubsubConfig.topic || 'Not set'}</div>
                   </div>
-                ) : (
                   <div>
                     <div className="text-sm text-gray-500">Format</div>
-                    <div className="font-medium text-gray-900 mt-1 uppercase">{deliveryConfig.format}</div>
+                    <div className="font-medium text-gray-900 mt-1 uppercase">{deliveryConfig.pubsubConfig.messageFormat}</div>
                   </div>
-                )}
-                
-                <div>
-                  <div className="text-sm text-gray-500">Frequency</div>
-                  <div className="font-medium text-gray-900 mt-1 capitalize">{deliveryConfig.frequency}</div>
+                  <div>
+                    <div className="text-sm text-gray-500">Real-time</div>
+                    <div className="font-medium text-gray-900 mt-1">{deliveryConfig.pubsubConfig.realtimeProcessing ? 'Enabled' : 'Disabled'}</div>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <div className="text-sm text-gray-500">Mechanism</div>
+                    <div className="font-medium text-gray-900 mt-1 capitalize">
+                      {deliveryConfig.mechanism === 'visualization' 
+                        ? 'Visualization Tools' 
+                        : deliveryConfig.mechanism}
+                    </div>
+                  </div>
+                  
+                  {deliveryConfig.mechanism === 'visualization' ? (
+                    <div>
+                      <div className="text-sm text-gray-500">Tool</div>
+                      <div className="font-medium text-gray-900 mt-1">
+                        {deliveryConfig.visualizationTool === 'powerbi' && 'Power BI'}
+                        {deliveryConfig.visualizationTool === 'tableau' && 'Tableau'}
+                        {deliveryConfig.visualizationTool === 'looker' && 'Looker'}
+                        {deliveryConfig.visualizationTool === 'quicksight' && 'QuickSight'}
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="text-sm text-gray-500">Format</div>
+                      <div className="font-medium text-gray-900 mt-1 uppercase">{deliveryConfig.format}</div>
+                    </div>
+                  )}
+                  
+                  <div>
+                    <div className="text-sm text-gray-500">Frequency</div>
+                    <div className="font-medium text-gray-900 mt-1 capitalize">{deliveryConfig.frequency}</div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-        </div>
         
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
           <h3 className="text-lg font-medium text-gray-900 mb-4">Access Instructions</h3>
@@ -797,6 +955,7 @@ ORDER BY shortage_quantity DESC`
           </div>
         </div>
       </div>
+    </div>
     );
   };
   
@@ -833,7 +992,8 @@ ORDER BY shortage_quantity DESC`
             disabled={
               (currentStep === 1 && selectedTables.length === 0) || 
               (currentStep === 2 && !sqlQuery.trim()) ||
-              (currentStep === 3 && deliveryConfig.mechanism === 'visualization' && !deliveryConfig.visualizationTool)
+              (currentStep === 3 && deliveryConfig.mechanism === 'visualization' && !deliveryConfig.visualizationTool) ||
+              (currentStep === 3 && dataFlowType === 'pubsub' && !deliveryConfig.pubsubConfig.topic.trim())
             }
           >
             Next
