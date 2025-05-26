@@ -49,7 +49,7 @@ const MainApplication = () => {
   // Navigation items - Updated to include all pages
   const navItems = [
     { id: 'home', label: 'Home', icon: <Layout className="h-5 w-5" /> },
-    { id: 'info', label: 'Overview & Audio', icon: <Volume2 className="h-5 w-5" /> },
+    { id: 'info', label: 'Learning Resources', icon: <Volume2 className="h-5 w-5" /> },
     { id: 'catalog2', label: 'Data Discoverability', icon: <Book className="h-5 w-5" /> },
     { id: 'contract-hub', label: 'Contract Hub', icon: <Target className="h-5 w-5" /> },
     { id: 'create-product', label: 'Create Data Product', icon: <Code className="h-5 w-5" /> },
