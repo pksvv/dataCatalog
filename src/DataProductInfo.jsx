@@ -169,23 +169,74 @@ const DataProductInfo = () => {
           <h2 className="text-2xl font-bold text-gray-900 mb-4">What are Data Products?</h2>
           <div className="prose max-w-none text-gray-700">
             <p className="text-lg mb-4">
-              Data products are curated, governed, and easily accessible data assets that serve specific business needs. 
-              They transform raw data into valuable, reusable resources that drive decision-making across the organization.
+              A data product is <strong>an autonomous, read-optimized, standardized data unit containing at least one dataset, 
+              created for satisfying user needs</strong>. It's not just raw data - it's data treated with the same care and focus 
+              as any other product your company makes.
             </p>
             
-            <h3 className="text-xl font-semibold text-gray-900 mb-3">Key Characteristics:</h3>
-            <ul className="list-disc list-inside space-y-2 mb-6">
-              <li><strong>Self-Service:</strong> Business users can discover and access data without technical expertise</li>
-              <li><strong>Governed:</strong> Built-in compliance, security, and quality controls</li>
-              <li><strong>Discoverable:</strong> Rich metadata and documentation make data easy to find and understand</li>
-              <li><strong>Reliable:</strong> Consistent quality, availability, and performance standards</li>
-              <li><strong>Reusable:</strong> Designed to serve multiple use cases and business functions</li>
-            </ul>
+            <div className="bg-amber-50 border-l-4 border-amber-400 p-4 mb-6">
+              <p className="text-amber-800">
+                <strong>Key Insight:</strong> Just like you wouldn't hand over raw materials as a finished product, 
+                data products are designed, packaged, supported, and delivered with the consumer in mind.
+              </p>
+            </div>
+
+            <h3 className="text-xl font-semibold text-gray-900 mb-3">Essential Characteristics:</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="space-y-3">
+                <div>
+                  <h4 className="font-semibold text-gray-900">🔍 Discoverable</h4>
+                  <p className="text-sm text-gray-600">Easily findable through data catalogs with rich metadata</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900">🎯 Addressable</h4>
+                  <p className="text-sm text-gray-600">Unique, stable identifier - like a web address you can always point to</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900">🤝 Trustworthy</h4>
+                  <p className="text-sm text-gray-600">Clear ownership, data lineage, and quality metrics</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900">📖 Self-Describing</h4>
+                  <p className="text-sm text-gray-600">Comes with documentation, metadata, and data contracts</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <h4 className="font-semibold text-gray-900">🔗 Interoperable</h4>
+                  <p className="text-sm text-gray-600">Uses standard formats to connect with other data products</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900">🛡️ Secure</h4>
+                  <p className="text-sm text-gray-600">Built-in security and governance compliance</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900">⚡ Read-Optimized</h4>
+                  <p className="text-sm text-gray-600">Structured for easy access and consumption, not just storage</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900">🎯 Purpose-Built</h4>
+                  <p className="text-sm text-gray-600">Created to solve specific problems or answer specific questions</p>
+                </div>
+              </div>
+            </div>
 
             <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
               <p className="text-blue-800">
-                <strong>Think of data products like apps in an app store</strong> - each one solves a specific problem, 
-                has clear documentation, and can be easily installed and used by anyone who needs it.
+                <strong>Data Mesh Context:</strong> Data products are the core building blocks of a decentralized data mesh, 
+                where domain teams take ownership of the data they understand best and package it for others to use.
+              </p>
+            </div>
+
+            <h3 className="text-xl font-semibold text-gray-900 mb-3">Real-World Example:</h3>
+            <div className="bg-gray-50 rounded-lg p-4">
+              <p className="text-gray-700 mb-2">
+                <strong>Traditional Approach:</strong> Analytics team requests user demographic data → 
+                Engineering team extracts from registration tables → Manual process, delays, explanations needed
+              </p>
+              <p className="text-gray-700">
+                <strong>Data Product Approach:</strong> Registration team proactively creates "Registered Users Data Product" → 
+                Marketing team self-serves clean, documented demographic data → Faster, more reliable, higher quality
               </p>
             </div>
           </div>
@@ -194,6 +245,15 @@ const DataProductInfo = () => {
         {/* Our Approach */}
         <div className="bg-white shadow-sm rounded-lg p-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Dual Approach Strategy</h2>
+          
+          <div className="mb-6 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-4">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Built on Data Mesh Principles</h3>
+            <p className="text-gray-700 text-sm">
+              Our approach embraces <strong>domain-driven ownership</strong> where teams closest to the data create and maintain 
+              data products. This decentralized model uses a <strong>self-serve data platform</strong> with 
+              <strong>federated computational governance</strong> to balance autonomy with organizational standards.
+            </p>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Traditional Approach */}
@@ -208,17 +268,18 @@ const DataProductInfo = () => {
               <div className="space-y-3 text-gray-700">
                 <p>Perfect for technical users who understand data structures:</p>
                 <ul className="list-disc list-inside space-y-1 text-sm">
-                  <li>Browse comprehensive data catalog</li>
-                  <li>Select specific tables and columns</li>
-                  <li>Configure delivery mechanisms (API, SFTP, GraphQL)</li>
-                  <li>Set up automated refresh schedules</li>
-                  <li>Full control over data selection and formatting</li>
+                  <li>Browse comprehensive data catalog with rich metadata</li>
+                  <li>Select specific tables and columns using data contracts</li>
+                  <li>Configure output ports (API, SFTP, GraphQL)</li>
+                  <li>Set up automated refresh schedules with SLAs</li>
+                  <li>Full control over data pipelines and transformations</li>
+                  <li>Built-in data quality validation and monitoring</li>
                 </ul>
               </div>
               
               <div className="mt-4 p-3 bg-gray-50 rounded">
                 <p className="text-sm text-gray-600">
-                  <strong>Best for:</strong> Data analysts, engineers, and technical stakeholders who need precise control
+                  <strong>Best for:</strong> Data analysts, engineers, and technical stakeholders who need precise control over data products
                 </p>
               </div>
             </div>
@@ -235,19 +296,38 @@ const DataProductInfo = () => {
               <div className="space-y-3 text-gray-700">
                 <p>Designed for business users who speak in outcomes:</p>
                 <ul className="list-disc list-inside space-y-1 text-sm">
-                  <li>Describe data needs in plain English</li>
-                  <li>AI automatically identifies relevant sources</li>
-                  <li>Generates optimized SQL queries</li>
-                  <li>Suggests appropriate delivery methods</li>
-                  <li>Creates contracts with zero technical knowledge</li>
+                  <li>Describe data needs using business language</li>
+                  <li>AI maps requirements to available data products</li>
+                  <li>Automatically generates data contracts and schemas</li>
+                  <li>Suggests optimal pipeline architectures</li>
+                  <li>Creates discoverable, self-describing data products</li>
+                  <li>Ensures governance and quality standards compliance</li>
                 </ul>
               </div>
               
               <div className="mt-4 p-3 bg-gray-50 rounded">
                 <p className="text-sm text-gray-600">
-                  <strong>Best for:</strong> Business analysts, product managers, and domain experts focused on outcomes
+                  <strong>Best for:</strong> Domain experts, product managers, and business analysts focused on solving user problems
                 </p>
               </div>
+            </div>
+          </div>
+
+          {/* Data Product Canvas */}
+          <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <h3 className="font-semibold text-yellow-800 mb-2">🎨 Data Product Canvas Integration</h3>
+            <p className="text-sm text-yellow-700 mb-2">
+              Both approaches leverage our data product canvas framework with eight key building blocks:
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs text-yellow-700">
+              <span>• Domain & Product Name</span>
+              <span>• Consumer & Use Cases</span>
+              <span>• Data Contract & SLAs</span>
+              <span>• Data Sources & Architecture</span>
+              <span>• Ubiquitous Language</span>
+              <span>• Classification</span>
+              <span>• Quality Metrics</span>
+              <span>• Governance Policies</span>
             </div>
           </div>
         </div>
@@ -256,13 +336,13 @@ const DataProductInfo = () => {
         <div className="bg-white shadow-sm rounded-lg p-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Benefits and Expected Impact</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
             <div className="text-center">
               <div className="bg-green-100 rounded-full p-3 mx-auto w-16 h-16 flex items-center justify-center mb-3">
                 <span className="text-2xl font-bold text-green-600">80%</span>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Faster Time to Insights</h3>
-              <p className="text-sm text-gray-600">Reduce data discovery and access time from weeks to hours</p>
+              <h3 className="font-semibold text-gray-900 mb-2">Faster Time to Value</h3>
+              <p className="text-sm text-gray-600">Self-service discovery reduces data access time from weeks to hours</p>
             </div>
             
             <div className="text-center">
@@ -270,27 +350,80 @@ const DataProductInfo = () => {
                 <span className="text-2xl font-bold text-blue-600">50%</span>
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Reduced Technical Debt</h3>
-              <p className="text-sm text-gray-600">Standardized governance and quality controls</p>
+              <p className="text-sm text-gray-600">Standardized governance and quality controls eliminate data silos</p>
             </div>
             
             <div className="text-center">
               <div className="bg-purple-100 rounded-full p-3 mx-auto w-16 h-16 flex items-center justify-center mb-3">
                 <span className="text-2xl font-bold text-purple-600">90%</span>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">User Adoption</h3>
-              <p className="text-sm text-gray-600">Self-service capabilities increase data democratization</p>
+              <h3 className="font-semibold text-gray-900 mb-2">Domain Autonomy</h3>
+              <p className="text-sm text-gray-600">Teams self-serve without central bottlenecks or delays</p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-orange-100 rounded-full p-3 mx-auto w-16 h-16 flex items-center justify-center mb-3">
+                <span className="text-2xl font-bold text-orange-600">95%</span>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Data Quality</h3>
+              <p className="text-sm text-gray-600">Built-in validation and clear ownership improve reliability</p>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 mb-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Measuring Success: Four Key Dimensions</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h4 className="font-semibold text-blue-600 mb-2">📊 Usage & Adoption</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li>• Daily/monthly active users of data products</li>
+                  <li>• Query frequency and data volume pulled</li>
+                  <li>• Time to value for new consumers</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold text-green-600 mb-2">💰 Business Impact</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li>• Revenue increase from data-driven decisions</li>
+                  <li>• Cost savings from process automation</li>
+                  <li>• Time saved enabling faster decision-making</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold text-purple-600 mb-2">✅ Data Quality</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li>• Consistency, accuracy, completeness scores</li>
+                  <li>• Data contract compliance rates</li>
+                  <li>• SLA adherence and timeliness metrics</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold text-orange-600 mb-2">⚡ Operational Efficiency</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li>• Platform uptime and query latency</li>
+                  <li>• Deployment frequency and cycle time</li>
+                  <li>• Mean time to recovery from failures</li>
+                </ul>
+              </div>
             </div>
           </div>
 
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <h3 className="font-semibold text-yellow-800 mb-2">Key Success Metrics</h3>
-            <ul className="text-sm text-yellow-700 space-y-1">
-              <li>• Number of active data contracts created monthly</li>
-              <li>• Average time from data request to first insights</li>
-              <li>• Percentage of self-service vs. IT-assisted data requests</li>
-              <li>• Data quality scores and governance compliance rates</li>
-              <li>• User satisfaction scores for data accessibility</li>
-            </ul>
+            <h3 className="font-semibold text-yellow-800 mb-2">Success Measurement Framework</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-yellow-700">
+              <div>
+                <strong>Customer Dimension:</strong>
+                <br />User satisfaction surveys, problem-solving effectiveness
+              </div>
+              <div>
+                <strong>Technology Dimension:</strong>
+                <br />Platform reliability, performance metrics, DevOps indicators
+              </div>
+              <div>
+                <strong>Business Dimension:</strong>
+                <br />ROI analysis, cost reduction, revenue impact alignment
+              </div>
+            </div>
           </div>
         </div>
 
@@ -298,16 +431,26 @@ const DataProductInfo = () => {
         <div className="bg-white shadow-sm rounded-lg p-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Implementation Roadmap</h2>
           
+          <div className="mb-6 bg-indigo-50 rounded-lg p-4">
+            <h3 className="text-lg font-semibold text-indigo-900 mb-2">🏗️ Platform-First Approach</h3>
+            <p className="text-indigo-800 text-sm">
+              Our implementation prioritizes building a <strong>self-serve data platform</strong> that centralizes common capabilities 
+              while maintaining domain team autonomy. This prevents the "reinventing the wheel" problem and ensures consistency.
+            </p>
+          </div>
+          
           <div className="space-y-6">
             <div className="flex items-start">
               <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold mr-4 mt-1">1</div>
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Phase 1: Foundation (Months 1-3)</h3>
+                <h3 className="font-semibold text-gray-900 mb-2">Phase 1: Platform Foundation (Months 1-3)</h3>
                 <ul className="text-gray-700 list-disc list-inside space-y-1">
-                  <li>Establish data governance framework</li>
-                  <li>Build initial data catalog with core datasets</li>
-                  <li>Implement traditional contract creation workflow</li>
-                  <li>Set up basic API and delivery mechanisms</li>
+                  <li>Establish federated computational governance framework</li>
+                  <li>Build self-serve platform with stable data infrastructure</li>
+                  <li>Implement data catalog with discovery ports and metadata management</li>
+                  <li>Create data contract specification and validation system</li>
+                  <li>Set up standardized output ports (APIs, file exports, streaming)</li>
+                  <li>Deploy automated data quality validation and "shift-left" testing</li>
                 </ul>
               </div>
             </div>
@@ -315,12 +458,14 @@ const DataProductInfo = () => {
             <div className="flex items-start">
               <div className="bg-purple-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold mr-4 mt-1">2</div>
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Phase 2: AI Enhancement (Months 4-6)</h3>
+                <h3 className="font-semibold text-gray-900 mb-2">Phase 2: Domain Enablement & AI (Months 4-6)</h3>
                 <ul className="text-gray-700 list-disc list-inside space-y-1">
-                  <li>Develop natural language processing capabilities</li>
-                  <li>Train AI models on enterprise data schemas</li>
-                  <li>Implement GenAI contract creation workflow</li>
-                  <li>Add support for visualization tool integrations</li>
+                  <li>Onboard first domain teams with data product canvas workshops</li>
+                  <li>Deploy standardized data pipeline orchestration tools</li>
+                  <li>Implement natural language processing for GenAI contract creation</li>
+                  <li>Train AI models on enterprise schemas and business language</li>
+                  <li>Add ubiquitous language management and business glossary</li>
+                  <li>Establish data product owner roles and responsibilities</li>
                 </ul>
               </div>
             </div>
@@ -328,12 +473,36 @@ const DataProductInfo = () => {
             <div className="flex items-start">
               <div className="bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold mr-4 mt-1">3</div>
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Phase 3: Scale & Optimize (Months 7-12)</h3>
+                <h3 className="font-semibold text-gray-900 mb-2">Phase 3: Scale & Advanced Features (Months 7-12)</h3>
                 <ul className="text-gray-700 list-disc list-inside space-y-1">
-                  <li>Expand to all major enterprise data sources</li>
-                  <li>Implement advanced analytics and recommendations</li>
-                  <li>Add real-time data streaming capabilities</li>
-                  <li>Establish center of excellence and training programs</li>
+                  <li>Expand to all domain teams with comprehensive data mesh architecture</li>
+                  <li>Implement advanced observability and cost management components</li>
+                  <li>Add real-time streaming capabilities and event-driven data products</li>
+                  <li>Deploy comprehensive success metrics across four dimensions</li>
+                  <li>Establish center of excellence for data product best practices</li>
+                  <li>Implement cross-product analytics and recommendation systems</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 bg-green-50 border border-green-200 rounded-lg p-4">
+            <h3 className="font-semibold text-green-800 mb-2">🎯 Critical Success Factors</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-green-700">
+              <div>
+                <strong>Organizational:</strong>
+                <ul className="list-disc list-inside mt-1 space-y-1">
+                  <li>Clear domain ownership and accountability</li>
+                  <li>Data product owner role definition</li>
+                  <li>Cross-functional collaboration workflows</li>
+                </ul>
+              </div>
+              <div>
+                <strong>Technical:</strong>
+                <ul className="list-disc list-inside mt-1 space-y-1">
+                  <li>Robust self-serve platform capabilities</li>
+                  <li>Automated governance and quality controls</li>
+                  <li>Interoperability through standard contracts</li>
                 </ul>
               </div>
             </div>

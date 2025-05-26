@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Book, FileText, Search, Layout, Database, Sparkles, Users, Settings, Menu, X, Info, ExternalLink, Volume2 } from 'lucide-react';
+import { Book, FileText, Search, Layout, Database, Sparkles, Users, Settings, Menu, X, Info, ExternalLink, Volume2, Code, Target } from 'lucide-react';
 import DataCatalogInterface from './DataCatalogInterface';
 import DataCatalog from './DataCatalog';
 import TraditionalContractFlow from './TraditionalContractFlow';
 import GenAIInterface from './GenAIInterface';
 import InteractiveArchitecture from './InteractiveArchitecture';
 import DataProductInfo from './DataProductInfo';
+import ContractHub from './ContractHub';
+import CreateDataProduct from './CreateDataProduct';
 
 const MainApplication = () => {
   // State for controlling sidebar expansion
@@ -30,6 +32,10 @@ const MainApplication = () => {
         return <TraditionalContractFlow />;
       case 'genai':
         return <GenAIInterface />;
+      case 'create-product':
+        return <CreateDataProduct />;
+      case 'contract-hub':
+        return <ContractHub setActivePage={setActivePage} />;
       case 'architecture':
         return <InteractiveArchitecture />;
       case 'info':
@@ -40,11 +46,13 @@ const MainApplication = () => {
     }
   };
   
-  // Navigation items - Updated to include the new audio/info page
+  // Navigation items - Updated to include all pages
   const navItems = [
     { id: 'home', label: 'Home', icon: <Layout className="h-5 w-5" /> },
     { id: 'info', label: 'Overview & Audio', icon: <Volume2 className="h-5 w-5" /> },
     { id: 'catalog2', label: 'Data Discoverability', icon: <Book className="h-5 w-5" /> },
+    { id: 'contract-hub', label: 'Contract Hub', icon: <Target className="h-5 w-5" /> },
+    { id: 'create-product', label: 'Create Data Product', icon: <Code className="h-5 w-5" /> },
     { id: 'traditional', label: 'Traditional Flow', icon: <FileText className="h-5 w-5" /> },
     { id: 'genai', label: 'GenAI Flow', icon: <Sparkles className="h-5 w-5" /> },
     { id: 'architecture', label: 'Architecture', icon: <Info className="h-5 w-5" /> }
@@ -147,7 +155,7 @@ const MainApplication = () => {
   );
 };
 
-// Updated Home page component with links to other pages including the new audio page
+// Updated Home page component with links to all pages including Contract Hub
 const HomePage = ({ setActivePage }) => {
   return (
     <div className="max-w-7xl mx-auto">
@@ -155,9 +163,31 @@ const HomePage = ({ setActivePage }) => {
         <h1 className="text-3xl font-bold text-indigo-900 mb-4">Data Product Strategy Prototype</h1>
         <p className="text-lg text-gray-600 mb-6">
           This prototype demonstrates vision for a data product marketplace within the enterprise, 
-          showcasing both traditional catalog-based and GenAI-powered natural language approaches to data contracts.
+          showcasing multiple approaches to data contracts including custom data product creation, traditional catalog-based selection, and GenAI-powered natural language interfaces.
         </p>
         
+        {/* Quick Access to Contract Hub */}
+        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-6 mb-8 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-bold mb-2">Start Creating Data Contracts</h2>
+              <p className="text-indigo-100 mb-4">
+                Choose from multiple approaches to create data contracts that fit your technical expertise and business needs.
+              </p>
+              <button 
+                className="bg-white text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center"
+                onClick={() => setActivePage('contract-hub')}
+              >
+                Go to Contract Hub
+                <Target className="ml-2 h-5 w-5" />
+              </button>
+            </div>
+            <div className="hidden md:block">
+              <Target className="h-24 w-24 text-indigo-200" />
+            </div>
+          </div>
+        </div>
+
         {/* Quick Access to Audio Overview */}
         <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg p-6 mb-8">
           <div className="flex items-start">
@@ -165,9 +195,9 @@ const HomePage = ({ setActivePage }) => {
               <Volume2 className="h-8 w-8 text-purple-600" />
             </div>
             <div className="flex-1">
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">📻 New: Audio Overview Available</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">📻 Audio Overview Available</h2>
               <p className="text-gray-600 mb-4">
-                Listen to a comprehensive overview of our data product strategy, including detailed explanations of both approaches and implementation roadmap.
+                Listen to a comprehensive overview of our data product strategy, including detailed explanations of all approaches and implementation roadmap.
               </p>
               <button 
                 className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
@@ -181,7 +211,30 @@ const HomePage = ({ setActivePage }) => {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="border border-gray-200 rounded-lg p-6 bg-gray-50 hover:bg-blue-50 hover:border-blue-200 transition-colors cursor-pointer" onClick={() => setActivePage('create-product')}>
+            <div className="flex items-start">
+              <div className="bg-blue-100 rounded-lg p-2 mr-4">
+                <Code className="h-8 w-8 text-blue-600" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">Create Data Product</h2>
+                <p className="text-gray-600">
+                  Build custom data products by selecting tables, writing SQL queries, and defining transformations.
+                </p>
+                <div className="mt-4 flex">
+                  <button 
+                    className="flex items-center text-blue-600 font-medium hover:text-blue-800"
+                    onClick={() => setActivePage('create-product')}
+                  >
+                    Build Data Product
+                    <ExternalLink className="ml-1 h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="border border-gray-200 rounded-lg p-6 bg-gray-50 hover:bg-indigo-50 hover:border-indigo-200 transition-colors cursor-pointer" onClick={() => setActivePage('traditional')}>
             <div className="flex items-start">
               <div className="bg-indigo-100 rounded-lg p-2 mr-4">
@@ -237,7 +290,7 @@ const HomePage = ({ setActivePage }) => {
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-2">Architecture Overview</h2>
               <p className="text-gray-600 mb-4">
-                This prototype demonstrates how both approaches integrate into a unified data product strategy:
+                This prototype demonstrates how all approaches integrate into a unified data product strategy:
               </p>
               <div className="p-4 bg-white rounded-lg border border-gray-200">
                 <div className="relative">
@@ -253,22 +306,26 @@ const HomePage = ({ setActivePage }) => {
                     <text x="450" y="165" textAnchor="middle" fill="#0c4a6e" fontSize="14">Data Product Platform</text>
                     
                     {/* Approaches */}
-                    <rect x="160" y="210" width="240" height="60" rx="5" fill="#bfdbfe" stroke="#2563eb" strokeWidth="1" />
-                    <text x="280" y="245" textAnchor="middle" fill="#1e3a8a" fontSize="14">Traditional Approach</text>
+                    <rect x="120" y="210" width="160" height="60" rx="5" fill="#bfdbfe" stroke="#2563eb" strokeWidth="1" />
+                    <text x="200" y="245" textAnchor="middle" fill="#1e3a8a" fontSize="12">Create Data Product</text>
                     
-                    <rect x="500" y="210" width="240" height="60" rx="5" fill="#f3e8ff" stroke="#9333ea" strokeWidth="1" />
-                    <text x="620" y="245" textAnchor="middle" fill="#6b21a8" fontSize="14">GenAI Approach</text>
+                    <rect x="320" y="210" width="160" height="60" rx="5" fill="#c7d2fe" stroke="#4338ca" strokeWidth="1" />
+                    <text x="400" y="245" textAnchor="middle" fill="#312e81" fontSize="12">Traditional Approach</text>
+                    
+                    <rect x="520" y="210" width="160" height="60" rx="5" fill="#f3e8ff" stroke="#9333ea" strokeWidth="1" />
+                    <text x="600" y="245" textAnchor="middle" fill="#6b21a8" fontSize="12">GenAI Approach</text>
                     
                     {/* Connecting Lines */}
-                    <line x1="280" y1="190" x2="280" y2="210" stroke="#2563eb" strokeWidth="2" />
-                    <line x1="620" y1="190" x2="620" y2="210" stroke="#9333ea" strokeWidth="2" />
+                    <line x1="200" y1="190" x2="200" y2="210" stroke="#2563eb" strokeWidth="2" />
+                    <line x1="400" y1="190" x2="400" y2="210" stroke="#4338ca" strokeWidth="2" />
+                    <line x1="600" y1="190" x2="600" y2="210" stroke="#9333ea" strokeWidth="2" />
                     
                     <line x1="450" y1="110" x2="450" y2="130" stroke="#94a3b8" strokeWidth="2" />
                   </svg>
                 </div>
                 <div className="mt-4 text-sm text-gray-500">
-                  <p>The diagram above shows how both the traditional catalog-based approach and the GenAI natural language approach 
-                  fit into the overall data product architecture. Both approaches leverage the same underlying data governance, 
+                  <p>The diagram above shows how the custom data product creation, traditional catalog-based approach, and GenAI natural language approach 
+                  all fit into the overall data product architecture. All approaches leverage the same underlying data governance, 
                   quality control, and delivery mechanisms.</p>
                   <button 
                     className="mt-2 flex items-center text-blue-600 font-medium hover:text-blue-800"
@@ -288,7 +345,7 @@ const HomePage = ({ setActivePage }) => {
         <h2 className="text-2xl font-bold text-gray-900 mb-4">Key Demo Features</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {/* Updated to include the new audio page */}
+          {/* Updated to include all features */}
           <div className="border border-gray-200 rounded-lg p-6">
             <div className="flex items-center mb-4">
               <div className="bg-purple-100 rounded-full p-2 mr-3">
@@ -324,11 +381,29 @@ const HomePage = ({ setActivePage }) => {
               Explore Data Discoverability
             </button>
           </div>
-          
+
           <div className="border border-gray-200 rounded-lg p-6">
             <div className="flex items-center mb-4">
               <div className="bg-blue-100 rounded-full p-2 mr-3">
-                <FileText className="h-6 w-6 text-blue-600" />
+                <Code className="h-6 w-6 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900">Custom Products</h3>
+            </div>
+            <p className="text-gray-600">
+              Create custom data products by selecting tables, writing SQL queries, and defining transformations.
+            </p>
+            <button 
+              className="mt-4 text-blue-600 font-medium hover:text-blue-800"
+              onClick={() => setActivePage('create-product')}
+            >
+              Build Data Product
+            </button>
+          </div>
+          
+          <div className="border border-gray-200 rounded-lg p-6">
+            <div className="flex items-center mb-4">
+              <div className="bg-indigo-100 rounded-full p-2 mr-3">
+                <FileText className="h-6 w-6 text-indigo-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900">Contract Creation</h3>
             </div>
@@ -336,28 +411,10 @@ const HomePage = ({ setActivePage }) => {
               Create data contracts by selecting specific data elements and configuring delivery preferences.
             </p>
             <button 
-              className="mt-4 text-blue-600 font-medium hover:text-blue-800"
+              className="mt-4 text-indigo-600 font-medium hover:text-indigo-800"
               onClick={() => setActivePage('traditional')}
             >
               Create Contract
-            </button>
-          </div>
-          
-          <div className="border border-gray-200 rounded-lg p-6">
-            <div className="flex items-center mb-4">
-              <div className="bg-purple-100 rounded-full p-2 mr-3">
-                <Sparkles className="h-6 w-6 text-purple-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900">Natural Language</h3>
-            </div>
-            <p className="text-gray-600">
-              Request data in plain English and let AI handle the technical details of data extraction.
-            </p>
-            <button 
-              className="mt-4 text-purple-600 font-medium hover:text-purple-800"
-              onClick={() => setActivePage('genai')}
-            >
-              Try GenAI
             </button>
           </div>
         </div>
