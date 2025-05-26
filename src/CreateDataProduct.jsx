@@ -22,7 +22,7 @@ const CreateDataProduct = () => {
     }
   });
   
-  const [dataFlowType, setDataFlowType] = useState('standard'); // 'standard', 'pubsub'
+  //const [dataFlowType, setDataFlowType] = useState('standard'); // 'standard', 'pubsub'
   const [dataProductName, setDataProductName] = useState('');
   const [dataProductDescription, setDataProductDescription] = useState('');
   const [isQueryExpanded, setIsQueryExpanded] = useState(true);
@@ -366,34 +366,6 @@ ORDER BY timestamp DESC`
             />
           </div>
         </div>
-
-        {/* Data Flow Type Selection */}
-        <div className="mb-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-3">Data Flow Type</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div 
-              className={`border rounded-lg p-4 cursor-pointer ${dataFlowType === 'standard' ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-300'}`}
-              onClick={() => setDataFlowType('standard')}
-            >
-              <div className="flex justify-center mb-2">
-                <Database className="h-8 w-8 text-purple-600" />
-              </div>
-              <h4 className="text-center font-medium">Standard Flow</h4>
-              <p className="text-xs text-center text-gray-500 mt-1">Traditional API/File delivery</p>
-            </div>
-            
-            <div 
-              className={`border rounded-lg p-4 cursor-pointer ${dataFlowType === 'pubsub' ? 'border-green-500 bg-green-50' : 'border-gray-300 hover:border-green-300'}`}
-              onClick={() => setDataFlowType('pubsub')}
-            >
-              <div className="flex justify-center mb-2">
-                <MessageSquare className="h-8 w-8 text-green-600" />
-              </div>
-              <h4 className="text-center font-medium">Pub/Sub Flow</h4>
-              <p className="text-xs text-center text-gray-500 mt-1">Real-time streaming</p>
-            </div>
-          </div>
-        </div>
         
         {/* Sample Queries */}
         <div className="mb-6">
@@ -560,6 +532,17 @@ ORDER BY timestamp DESC`
                 <h3 className="text-center font-medium">SFTP Transfer</h3>
                 <p className="text-xs text-center text-gray-500 mt-1">Scheduled file delivery to your SFTP server</p>
               </div>
+
+              <div 
+                className={`border rounded-lg p-4 cursor-pointer ${deliveryConfig.mechanism === 'pubsub' ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-300'}`}
+                onClick={() => setDeliveryConfig({...deliveryConfig, mechanism: 'pubsub', visualizationTool: null})}
+              >
+                <div className="flex justify-center mb-2">
+                  <MessageSquare className="h-8 w-8 text-purple-600" />
+                </div>
+                <h3 className="text-center font-medium">Pub/Sub</h3>
+                <p className="text-xs text-center text-gray-500 mt-1">Real-time streaming and messaging</p>
+              </div>
               
               <div 
                 className={`border rounded-lg p-4 cursor-pointer ${deliveryConfig.mechanism === 'graphql' ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-300'}`}
@@ -594,7 +577,7 @@ ORDER BY timestamp DESC`
           </div>
 
           {/* Pub/Sub Configuration */}
-          {dataFlowType === 'pubsub' && (
+          {deliveryConfig.mechanism === 'pubsub' && (
             <>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Pub/Sub Topic Configuration</label>
@@ -859,10 +842,10 @@ ORDER BY timestamp DESC`
           
           <div className="border-t border-gray-200 pt-4">
             <h4 className="font-medium text-gray-900 mb-2">
-              {dataFlowType === 'pubsub' ? 'Pub/Sub Configuration' : 'Delivery Configuration'}
+              {deliveryConfig.mechanism === 'pubsub' ? 'Pub/Sub Configuration' : 'Delivery Configuration'}
             </h4>
             <div className="bg-white p-3 rounded border border-gray-200">
-              {dataFlowType === 'pubsub' ? (
+              {deliveryConfig.mechanism === 'pubsub' ? (
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <div className="text-sm text-gray-500">Topic</div>
@@ -993,7 +976,7 @@ ORDER BY timestamp DESC`
               (currentStep === 1 && selectedTables.length === 0) || 
               (currentStep === 2 && !sqlQuery.trim()) ||
               (currentStep === 3 && deliveryConfig.mechanism === 'visualization' && !deliveryConfig.visualizationTool) ||
-              (currentStep === 3 && dataFlowType === 'pubsub' && !deliveryConfig.pubsubConfig.topic.trim())
+              (currentStep === 3 && deliveryConfig.mechanism === 'pubsub' && !deliveryConfig.pubsubConfig.topic.trim())
             }
           >
             Next
