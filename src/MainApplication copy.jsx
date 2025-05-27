@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Book, FileText, Search, Layout, Database, Sparkles, Users, Settings, Menu, X, Info, ExternalLink, Volume2, Code, Target } from 'lucide-react';
 import DataCatalogInterface from './DataCatalogInterface';
 import DataCatalog from './DataCatalog';
@@ -15,12 +15,6 @@ const MainApplication = () => {
   
   // State for active component/page
   const [activePage, setActivePage] = useState('home');
-
-  // Update document title when component mounts or page changes
-  useEffect(() => {
-    document.title = 'Data Marketplace';
-  }, [activePage]);
-
   
   // Helper function to toggle sidebar
   const toggleSidebar = () => {
@@ -57,7 +51,7 @@ const MainApplication = () => {
     { id: 'home', label: 'Home', icon: <Layout className="h-5 w-5" /> },
     { id: 'info', label: 'Learning Resources', icon: <Volume2 className="h-5 w-5" /> },
     { id: 'catalog2', label: 'Data Discoverability', icon: <Book className="h-5 w-5" /> },
-    { id: 'contract-hub', label: 'Data Contract Hub', icon: <Target className="h-5 w-5" /> },
+    { id: 'contract-hub', label: 'Contract Hub', icon: <Target className="h-5 w-5" /> },
     { id: 'traditional', label: 'Select Data Product', icon: <FileText className="h-5 w-5" /> },
     { id: 'genai', label: 'GenAI Flow', icon: <Sparkles className="h-5 w-5" /> },
     { id: 'architecture', label: 'Architecture', icon: <Info className="h-5 w-5" /> }

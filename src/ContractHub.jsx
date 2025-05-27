@@ -27,7 +27,7 @@ const ContractHub = ({ setActivePage }) => {
     },
     {
       id: 'traditional',
-      title: 'Traditional Data Contract',
+      title: 'Select Data Product',
       description: 'Browse existing data products, select specific columns, and create contracts through a guided interface.',
       icon: <FileText className="h-12 w-12 text-indigo-600" />,
       color: 'indigo',
@@ -154,9 +154,9 @@ const ContractHub = ({ setActivePage }) => {
         </div>
       </div>
 
-      {/* Contract Methods Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-        {contractMethods.map((method) => {
+      {/* Contract Methods Grid - Only showing 2 cards now */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        {contractMethods.filter(method => method.id !== 'create-product').map((method) => {
           const colors = getColorClasses(method.color);
           
           return (
@@ -209,20 +209,13 @@ const ContractHub = ({ setActivePage }) => {
                 </ul>
               </div>
 
-              {/* Action Button */}
-              <button
-                onClick={() => setActivePage(method.targetPage)}
-                className={`w-full px-4 py-3 text-white rounded-lg font-medium transition-colors ${colors.button} flex items-center justify-center`}
-              >
-                Get Started
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </button>
+
             </div>
           );
         })}
       </div>
 
-      {/* Comparison Table */}
+      {/* Updated Comparison Table - Only 2 columns now */}
       <div className="bg-white shadow-sm rounded-lg p-8 mb-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Feature Comparison</h2>
         <div className="overflow-x-auto">
@@ -230,45 +223,33 @@ const ContractHub = ({ setActivePage }) => {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Feature</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Create Data Product</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Traditional Contract</th>
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Select Data Product</th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Natural Language</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               <tr>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Custom SQL Queries</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Pre-built Data Products</td>
                 <td className="px-6 py-4 whitespace-nowrap text-center text-green-600">✓</td>
-                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-400">✗</td>
-                <td className="px-6 py-4 whitespace-nowrap text-center text-yellow-600">Auto-generated</td>
+                <td className="px-6 py-4 whitespace-nowrap text-center text-green-600">✓</td>
               </tr>
               <tr className="bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Multi-table Joins</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Column-level Selection</td>
                 <td className="px-6 py-4 whitespace-nowrap text-center text-green-600">✓</td>
-                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-400">✗</td>
-                <td className="px-6 py-4 whitespace-nowrap text-center text-green-600">✓</td>
+                <td className="px-6 py-4 whitespace-nowrap text-center text-yellow-600">Auto-detected</td>
               </tr>
               <tr>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Pre-built Data Products</td>
-                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-400">✗</td>
-                <td className="px-6 py-4 whitespace-nowrap text-center text-green-600">✓</td>
-                <td className="px-6 py-4 whitespace-nowrap text-center text-green-600">✓</td>
-              </tr>
-              <tr className="bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Technical Skills Required</td>
-                <td className="px-6 py-4 whitespace-nowrap text-center text-red-600">High</td>
                 <td className="px-6 py-4 whitespace-nowrap text-center text-green-600">Low</td>
                 <td className="px-6 py-4 whitespace-nowrap text-center text-green-600">None</td>
               </tr>
-              <tr>
+              <tr className="bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Setup Time</td>
-                <td className="px-6 py-4 whitespace-nowrap text-center text-yellow-600">15-30 min</td>
                 <td className="px-6 py-4 whitespace-nowrap text-center text-green-600">5-10 min</td>
                 <td className="px-6 py-4 whitespace-nowrap text-center text-green-600">2-5 min</td>
               </tr>
-              <tr className="bg-gray-50">
+              <tr>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Flexibility</td>
-                <td className="px-6 py-4 whitespace-nowrap text-center text-green-600">High</td>
                 <td className="px-6 py-4 whitespace-nowrap text-center text-yellow-600">Medium</td>
                 <td className="px-6 py-4 whitespace-nowrap text-center text-yellow-600">Medium</td>
               </tr>
@@ -277,7 +258,7 @@ const ContractHub = ({ setActivePage }) => {
         </div>
       </div>
 
-      {/* Help & Resources Section */}
+      {/* Help & Resources Section - Updated to remove Create Data Product references */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-white shadow-sm rounded-lg p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Need Help Choosing?</h3>
@@ -297,16 +278,7 @@ const ContractHub = ({ setActivePage }) => {
               </div>
               <div>
                 <h4 className="font-medium text-gray-900">For Data Analysts</h4>
-                <p className="text-sm text-gray-600">Use Traditional contracts to access existing data products with column-level control.</p>
-              </div>
-            </div>
-            <div className="flex items-start">
-              <div className="bg-purple-100 rounded-full p-1 mr-3 mt-1">
-                <Code className="h-4 w-4 text-purple-600" />
-              </div>
-              <div>
-                <h4 className="font-medium text-gray-900">For Data Engineers</h4>
-                <p className="text-sm text-gray-600">Create Data Products for complex transformations and custom business logic.</p>
+                <p className="text-sm text-gray-600">Use Select Data Product to access existing data products with column-level control.</p>
               </div>
             </div>
           </div>
