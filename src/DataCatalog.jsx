@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Search, Database, Shield, Clock, User, Info, File, 
   Tag, Eye, FileText, BarChart2, DollarSign, 
@@ -18,27 +18,27 @@ const DataCatalogInterface = () => {
   const [showDataQuality, setShowDataQuality] = useState(false);
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   
-  // Mock data products
+  // Updated data products from paste.txt
   const dataProducts = [
     {
       id: 1,
-      name: "Customer 360",
-      description: "Comprehensive customer data including demographics, transactions, and preferences",
-      owner: "Customer Analytics Team",
+      name: "Balance Sheet",
+      description: "Supplemental Balance Sheet data for FR 2052A reporting. Captures maturity, collateral, valuation, and counterparty metrics.",
+      owner: "Finance Analytics Team",
       updateFrequency: "Daily",
       sensitivity: "High",
       quality: 92,
-      domain: "Customer",
+      domain: "Balance Sheet, Collateral, Maturity",
       columns: [
-        { name: "customer_id", type: "string", sensitivity: "low", description: "Unique identifier for the customer" },
-        { name: "full_name", type: "string", sensitivity: "medium", description: "Customer's full name" },
-        { name: "email", type: "string", sensitivity: "high", description: "Customer's email address" },
-        { name: "phone", type: "string", sensitivity: "high", description: "Customer's phone number" },
-        { name: "address", type: "string", sensitivity: "high", description: "Customer's physical address" },
-        { name: "segment", type: "string", sensitivity: "medium", description: "Customer segment category" },
-        { name: "lifetime_value", type: "number", sensitivity: "medium", description: "Calculated lifetime value of customer" },
-        { name: "acquisition_date", type: "date", sensitivity: "low", description: "Date when customer was acquired" },
-        { name: "last_purchase_date", type: "date", sensitivity: "low", description: "Date of customer's most recent purchase" }
+        { name: "T_LOAD_TS", type: "string", sensitivity: "low", description: "Timestamp when the record was loaded" },
+        { name: "N_VERSION_ID", type: "string", sensitivity: "medium", description: "Version identifier for the record" },
+        { name: "N_RUN_SKEY", type: "string", sensitivity: "high", description: "Unique run key for tracking data ingestion from Source" },
+        { name: "N_RPT_ID", type: "string", sensitivity: "high", description: "Report ID for 2052A instance" },
+        { name: "D_RPT_DT", type: "string", sensitivity: "high", description: "Report date" },
+        { name: "N_AGG_EXTRACT_ID", type: "string", sensitivity: "medium", description: "Extract identifier for aggregation" },
+        { name: "V_SBS_PROD_MAP_NM", type: "number", sensitivity: "medium", description: "Mapped supplemental balance sheet product name" },
+        { name: "V_LGL_ENT_NM", type: "date", sensitivity: "low", description: "Legal entity name" },
+        { name: "V_CMNT_TX", type: "date", sensitivity: "low", description: "Comment or notes text" }
       ],
       usage: {
         activeContracts: 24,
@@ -90,6 +90,74 @@ const DataCatalogInterface = () => {
     },
     {
       id: 2,
+      name: "Derivatives and Collaterals",
+      description: "Supplemental Derivatives and Collateral data used in FR 2052A reporting for capturing exposures, netting, encumbrance, and valuation details.",
+      owner: "Finance Analytics Team",
+      updateFrequency: "Daily",
+      sensitivity: "High",
+      quality: 92,
+      domain: "Finance/Derivatives, Finance/Collaterals",
+      columns: [
+        { name: "T_LOAD_TS", type: "string", sensitivity: "low", description: "Timestamp when the record was loaded." },
+        { name: "N_VERSION_ID", type: "string", sensitivity: "medium", description: "Version identifier for the record." },
+        { name: "N_RUN_SKEY", type: "string", sensitivity: "high", description: "Unique run key for tracking data ingestion from Source." },
+        { name: "N_RPT_ID", type: "string", sensitivity: "high", description: "Report ID for the associated 2052A record." },
+        { name: "D_RPT_DT", type: "string", sensitivity: "high", description: "Report as-of date." },
+        { name: "N_AGG_EXTRACT_ID", type: "string", sensitivity: "medium", description: "Aggregate extract identifier." },
+        { name: "V_REPORT_TBL_NM", type: "number", sensitivity: "medium", description: "Internal counterparty indicator." },
+        { name: "F_INTR_IN", type: "date", sensitivity: "low", description: "Name of the legal entity." },
+        { name: "V_LGL_ENT_NM", type: "date", sensitivity: "low", description: "Mapped product name." }
+      ],
+      usage: {
+        activeContracts: 24,
+        monthlyQueries: "1.2M"
+      },
+      metrics: {
+        uptime: "99.8%",
+        avgResponseTime: "42ms",
+        dataQuality: "95%",
+        completeness: "98%"
+      },
+      cost: {
+        storagePerMonth: "$120",
+        queryPerMillion: "$0.35",
+        apiCallsPerThousand: "$0.25",
+        monthlyTotal: "$850"
+      },
+      lineage: {
+        upstream: [
+          { id: "src1", name: "CRM System", type: "source" },
+          { id: "src2", name: "Web Analytics", type: "source" },
+          { id: "src3", name: "Mobile App", type: "source" }
+        ],
+        transformations: [
+          { id: "etl1", name: "Customer Data Integration", type: "process" },
+          { id: "etl2", name: "Identity Resolution", type: "process" }
+        ],
+        downstream: [
+          { id: "tgt1", name: "Marketing Segments", type: "target" },
+          { id: "tgt2", name: "Personalization Engine", type: "target" },
+          { id: "tgt3", name: "Customer Service Dashboard", type: "target" }
+        ]
+      },
+      logs: [
+        { timestamp: "2025-05-06T08:12:34", level: "INFO", message: "Daily refresh completed successfully" },
+        { timestamp: "2025-05-06T02:15:22", level: "WARN", message: "Web Analytics source delayed by 15 minutes" },
+        { timestamp: "2025-05-05T08:14:12", level: "INFO", message: "Daily refresh completed successfully" }
+      ],
+      failedJobs: [
+        { id: "job1", timestamp: "2025-05-04T08:22:17", name: "Identity Resolution", status: "FAILED", reason: "Timeout after 120 seconds" },
+        { id: "job2", timestamp: "2025-04-28T02:45:12", name: "Mobile App Integration", status: "FAILED", reason: "Schema validation error" }
+      ],
+      dataQuality: [
+        { metric: "Completeness", score: 97, trend: "up", description: "Percentage of non-null values" },
+        { metric: "Accuracy", score: 94, trend: "stable", description: "Correctness of data values" },
+        { metric: "Consistency", score: 96, trend: "up", description: "Consistency across related data elements" },
+        { metric: "Timeliness", score: 92, trend: "down", description: "How up-to-date the data is" }
+      ]
+    },
+    {
+      id: 3,
       name: "Product Inventory",
       description: "Current inventory levels, locations, and product details",
       owner: "Supply Chain Management",
@@ -139,7 +207,7 @@ const DataCatalogInterface = () => {
       }
     },
     {
-      id: 3,
+      id: 4,
       name: "Sales Transactions",
       description: "Detailed record of all sales transactions across channels",
       owner: "Finance Department",
@@ -194,7 +262,7 @@ const DataCatalogInterface = () => {
     }
   ];
 
-  // Filter function for search (simplified)
+  // Filter function for search
   const [searchTerm, setSearchTerm] = useState('');
   const filteredProducts = dataProducts.filter(product => 
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
