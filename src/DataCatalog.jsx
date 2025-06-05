@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
-  Search, Database, Shield, Clock, User, Info, File, 
-  Tag, Eye, FileText, BarChart2, DollarSign, 
-  AlertTriangle, Activity, CheckSquare, MoreVertical, ArrowRight, ArrowLeft
+  Search, Database, Shield, Clock, User, Info, 
+  Eye, FileText, BarChart2, DollarSign, 
+  AlertTriangle, Activity, CheckSquare, MoreVertical, ArrowRight
 } from 'lucide-react';
 
 const DataCatalogInterface = () => {
@@ -17,7 +17,25 @@ const DataCatalogInterface = () => {
   const [showFailedJobs, setShowFailedJobs] = useState(false);
   const [showDataQuality, setShowDataQuality] = useState(false);
   const [showMoreOptions, setShowMoreOptions] = useState(false);
-  
+
+  // Enhanced search functionality
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchSuggestions, setSearchSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  // Sample intelligent search queries
+  const exampleQueries = [
+    "Show me all customer data with personal information",
+    "I need financial data for regulatory reporting",
+    "Where can I find derivative and collateral information?",
+    "What data do we have about product inventory levels?",
+    "Show me sales transaction data with customer details",
+    "I'm looking for balance sheet data for FR 2052A compliance",
+    "Find data products with high sensitivity levels",
+    "What data sources contain pricing information?"
+  ];
+
   // Updated data products from paste.txt
   const dataProducts = [
     {
@@ -58,28 +76,28 @@ const DataCatalogInterface = () => {
       },
       lineage: {
         upstream: [
-          { id: "src1", name: "CRM System", type: "source" },
-          { id: "src2", name: "Web Analytics", type: "source" },
-          { id: "src3", name: "Mobile App", type: "source" }
+          { id: "src1", name: "Regulatory Reporting System", type: "source" },
+          { id: "src2", name: "Balance Sheet Engine", type: "source" },
+          { id: "src3", name: "Risk Management Platform", type: "source" }
         ],
         transformations: [
-          { id: "etl1", name: "Customer Data Integration", type: "process" },
-          { id: "etl2", name: "Identity Resolution", type: "process" }
+          { id: "etl1", name: "FR 2052A Data Processing", type: "process" },
+          { id: "etl2", name: "Regulatory Validation", type: "process" }
         ],
         downstream: [
-          { id: "tgt1", name: "Marketing Segments", type: "target" },
-          { id: "tgt2", name: "Personalization Engine", type: "target" },
-          { id: "tgt3", name: "Customer Service Dashboard", type: "target" }
+          { id: "tgt1", name: "Federal Reserve Reporting", type: "target" },
+          { id: "tgt2", name: "Risk Analytics Dashboard", type: "target" },
+          { id: "tgt3", name: "Compliance Monitoring", type: "target" }
         ]
       },
       logs: [
-        { timestamp: "2025-05-06T08:12:34", level: "INFO", message: "Daily refresh completed successfully" },
-        { timestamp: "2025-05-06T02:15:22", level: "WARN", message: "Web Analytics source delayed by 15 minutes" },
-        { timestamp: "2025-05-05T08:14:12", level: "INFO", message: "Daily refresh completed successfully" }
+        { timestamp: "2025-06-05T08:12:34", level: "INFO", message: "Daily FR 2052A refresh completed successfully" },
+        { timestamp: "2025-06-05T02:15:22", level: "WARN", message: "Risk data source delayed by 15 minutes" },
+        { timestamp: "2025-06-04T08:14:12", level: "INFO", message: "Daily refresh completed successfully" }
       ],
       failedJobs: [
-        { id: "job1", timestamp: "2025-05-04T08:22:17", name: "Identity Resolution", status: "FAILED", reason: "Timeout after 120 seconds" },
-        { id: "job2", timestamp: "2025-04-28T02:45:12", name: "Mobile App Integration", status: "FAILED", reason: "Schema validation error" }
+        { id: "job1", timestamp: "2025-06-03T08:22:17", name: "Regulatory Validation", status: "FAILED", reason: "Data quality threshold not met" },
+        { id: "job2", timestamp: "2025-05-28T02:45:12", name: "Balance Sheet Integration", status: "FAILED", reason: "Schema validation error" }
       ],
       dataQuality: [
         { metric: "Completeness", score: 97, trend: "up", description: "Percentage of non-null values" },
@@ -105,8 +123,8 @@ const DataCatalogInterface = () => {
         { name: "D_RPT_DT", type: "string", sensitivity: "high", description: "Report as-of date." },
         { name: "N_AGG_EXTRACT_ID", type: "string", sensitivity: "medium", description: "Aggregate extract identifier." },
         { name: "V_REPORT_TBL_NM", type: "number", sensitivity: "medium", description: "Internal counterparty indicator." },
-        { name: "F_INTR_IN", type: "date", sensitivity: "low", description: "Name of the legal entity." },
-        { name: "V_LGL_ENT_NM", type: "date", sensitivity: "low", description: "Mapped product name." }
+        { name: "F_INTR_IN", type: "date", sensitivity: "low", description: "Interest rate indicator." },
+        { name: "V_LGL_ENT_NM", type: "date", sensitivity: "low", description: "Legal entity name." }
       ],
       usage: {
         activeContracts: 24,
@@ -126,28 +144,28 @@ const DataCatalogInterface = () => {
       },
       lineage: {
         upstream: [
-          { id: "src1", name: "CRM System", type: "source" },
-          { id: "src2", name: "Web Analytics", type: "source" },
-          { id: "src3", name: "Mobile App", type: "source" }
+          { id: "src1", name: "Derivatives Trading System", type: "source" },
+          { id: "src2", name: "Collateral Management", type: "source" },
+          { id: "src3", name: "Market Data Provider", type: "source" }
         ],
         transformations: [
-          { id: "etl1", name: "Customer Data Integration", type: "process" },
-          { id: "etl2", name: "Identity Resolution", type: "process" }
+          { id: "etl1", name: "Derivatives Data Processing", type: "process" },
+          { id: "etl2", name: "Collateral Valuation", type: "process" }
         ],
         downstream: [
-          { id: "tgt1", name: "Marketing Segments", type: "target" },
-          { id: "tgt2", name: "Personalization Engine", type: "target" },
-          { id: "tgt3", name: "Customer Service Dashboard", type: "target" }
+          { id: "tgt1", name: "Risk Exposure Reports", type: "target" },
+          { id: "tgt2", name: "Regulatory Submissions", type: "target" },
+          { id: "tgt3", name: "Credit Risk Analytics", type: "target" }
         ]
       },
       logs: [
-        { timestamp: "2025-05-06T08:12:34", level: "INFO", message: "Daily refresh completed successfully" },
-        { timestamp: "2025-05-06T02:15:22", level: "WARN", message: "Web Analytics source delayed by 15 minutes" },
-        { timestamp: "2025-05-05T08:14:12", level: "INFO", message: "Daily refresh completed successfully" }
+        { timestamp: "2025-06-05T08:12:34", level: "INFO", message: "Daily derivatives refresh completed successfully" },
+        { timestamp: "2025-06-05T02:15:22", level: "WARN", message: "Market data source delayed by 15 minutes" },
+        { timestamp: "2025-06-04T08:14:12", level: "INFO", message: "Daily refresh completed successfully" }
       ],
       failedJobs: [
-        { id: "job1", timestamp: "2025-05-04T08:22:17", name: "Identity Resolution", status: "FAILED", reason: "Timeout after 120 seconds" },
-        { id: "job2", timestamp: "2025-04-28T02:45:12", name: "Mobile App Integration", status: "FAILED", reason: "Schema validation error" }
+        { id: "job1", timestamp: "2025-06-03T08:22:17", name: "Collateral Valuation", status: "FAILED", reason: "Market data unavailable" },
+        { id: "job2", timestamp: "2025-05-28T02:45:12", name: "Derivatives Integration", status: "FAILED", reason: "Schema validation error" }
       ],
       dataQuality: [
         { metric: "Completeness", score: 97, trend: "up", description: "Percentage of non-null values" },
@@ -259,17 +277,273 @@ const DataCatalogInterface = () => {
           { id: "tgt3", name: "Customer 360", type: "target" }
         ]
       }
+    },
+    {
+      id: 5,
+      name: "Customer 360",
+      description: "Comprehensive customer profiles with demographic, behavioral, and transaction history",
+      owner: "Customer Analytics Team",
+      updateFrequency: "Daily",
+      sensitivity: "High",
+      quality: 93,
+      domain: "Customer",
+      columns: [
+        { name: "customer_id", type: "string", sensitivity: "medium", description: "Unique identifier for the customer" },
+        { name: "full_name", type: "string", sensitivity: "high", description: "Customer's full name" },
+        { name: "email", type: "string", sensitivity: "high", description: "Customer's email address" },
+        { name: "phone", type: "string", sensitivity: "high", description: "Customer's phone number" },
+        { name: "address", type: "string", sensitivity: "high", description: "Customer's address" },
+        { name: "segment", type: "string", sensitivity: "medium", description: "Customer segment classification" },
+        { name: "lifetime_value", type: "number", sensitivity: "medium", description: "Total customer lifetime value" },
+        { name: "acquisition_date", type: "date", sensitivity: "low", description: "Date customer was acquired" },
+        { name: "last_purchase_date", type: "date", sensitivity: "low", description: "Date of last purchase" }
+      ],
+      usage: {
+        activeContracts: 28,
+        monthlyQueries: "1.8M"
+      },
+      metrics: {
+        uptime: "99.5%",
+        avgResponseTime: "52ms",
+        dataQuality: "93%",
+        completeness: "94%"
+      },
+      cost: {
+        storagePerMonth: "$150",
+        queryPerMillion: "$0.38",
+        apiCallsPerThousand: "$0.30",
+        monthlyTotal: "$980"
+      },
+      lineage: {
+        upstream: [
+          { id: "src1", name: "CRM System", type: "source" },
+          { id: "src2", name: "Web Analytics", type: "source" },
+          { id: "src3", name: "Mobile App", type: "source" }
+        ],
+        transformations: [
+          { id: "etl1", name: "Customer Data Integration", type: "process" },
+          { id: "etl2", name: "Identity Resolution", type: "process" }
+        ],
+        downstream: [
+          { id: "tgt1", name: "Marketing Segments", type: "target" },
+          { id: "tgt2", name: "Personalization Engine", type: "target" },
+          { id: "tgt3", name: "Customer Service Dashboard", type: "target" }
+        ]
+      }
     }
   ];
 
-  // Filter function for search
-  const [searchTerm, setSearchTerm] = useState('');
-  const filteredProducts = dataProducts.filter(product => 
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.domain.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  
+  // Search handler functions
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearchFocus = () => {
+    if (searchSuggestions.length > 0) {
+      setShowSuggestions(true);
+    }
+  };
+
+  const handleExampleClick = (example) => {
+    setSearchTerm(example);
+  };
+
+  // Separate filtering logic
+  const filterProducts = (query) => {
+    if (!query.trim()) {
+      return dataProducts;
+    }
+
+    // Enhanced filtering logic
+    return dataProducts.filter(product => {
+      const queryLower = query.toLowerCase();
+      
+      // Direct matches
+      if (product.name.toLowerCase().includes(queryLower) ||
+          product.description.toLowerCase().includes(queryLower) ||
+          product.domain.toLowerCase().includes(queryLower)) {
+        return true;
+      }
+      
+      // Column-level search
+      const columnMatch = product.columns.some(column => 
+        column.name.toLowerCase().includes(queryLower) ||
+        column.description.toLowerCase().includes(queryLower)
+      );
+      
+      // Intent-based search
+      if (queryLower.includes('customer') && 
+          (product.name.toLowerCase().includes('customer') || 
+           product.columns.some(col => col.name.toLowerCase().includes('customer')))) {
+        return true;
+      }
+      
+      if (queryLower.includes('financial') && 
+          (product.domain.toLowerCase().includes('finance') || 
+           product.name.toLowerCase().includes('balance'))) {
+        return true;
+      }
+      
+      if (queryLower.includes('inventory') && 
+          product.name.toLowerCase().includes('inventory')) {
+        return true;
+      }
+      
+      if (queryLower.includes('transaction') && 
+          product.name.toLowerCase().includes('transaction')) {
+        return true;
+      }
+      
+      if (queryLower.includes('sensitive') && 
+          product.sensitivity.toLowerCase() === 'high') {
+        return true;
+      }
+      
+      if (queryLower.includes('regulatory') && 
+          product.description.toLowerCase().includes('fr 2052a')) {
+        return true;
+      }
+      
+      if (queryLower.includes('derivative') && 
+          product.name.toLowerCase().includes('derivative')) {
+        return true;
+      }
+      
+      if (queryLower.includes('pricing') && 
+          product.columns.some(col => col.name.toLowerCase().includes('price'))) {
+        return true;
+      }
+      
+      return columnMatch;
+    });
+  };
+
+  // Generate intelligent search suggestions
+  const generateSearchSuggestions = (query) => {
+    const queryLower = query.toLowerCase();
+    const suggestions = [];
+    
+    if (queryLower.includes('customer') || queryLower.includes('personal')) {
+      suggestions.push({
+        type: 'table',
+        title: 'Customer 360',
+        description: 'Based on your query, you might be interested in customer data',
+        columns: ['customer_id', 'full_name', 'email', 'segment', 'lifetime_value'],
+        reasoning: 'Contains comprehensive customer information including personal details and behavioral data'
+      });
+    }
+    
+    if (queryLower.includes('financial') || queryLower.includes('balance') || queryLower.includes('regulatory')) {
+      suggestions.push({
+        type: 'table',
+        title: 'Balance Sheet',
+        description: 'Financial reporting data for regulatory compliance',
+        columns: ['N_RPT_ID', 'D_RPT_DT', 'V_SBS_PROD_MAP_NM', 'V_LGL_ENT_NM'],
+        reasoning: 'FR 2052A regulatory reporting data with balance sheet metrics'
+      });
+      
+      suggestions.push({
+        type: 'table',
+        title: 'Derivatives and Collaterals',
+        description: 'Derivatives and collateral data for financial reporting',
+        columns: ['N_RPT_ID', 'D_RPT_DT', 'V_REPORT_TBL_NM', 'F_INTR_IN'],
+        reasoning: 'Supplemental derivatives data used in FR 2052A reporting'
+      });
+    }
+    
+    if (queryLower.includes('inventory') || queryLower.includes('product')) {
+      suggestions.push({
+        type: 'table',
+        title: 'Product Inventory',
+        description: 'Real-time inventory and product information',
+        columns: ['product_id', 'current_stock', 'reorder_level', 'cost_price'],
+        reasoning: 'Current inventory levels and product details with real-time updates'
+      });
+    }
+    
+    if (queryLower.includes('sales') || queryLower.includes('transaction') || queryLower.includes('revenue')) {
+      suggestions.push({
+        type: 'table',
+        title: 'Sales Transactions',
+        description: 'Detailed sales transaction records',
+        columns: ['transaction_id', 'customer_id', 'total_amount', 'payment_method'],
+        reasoning: 'Complete transaction history across all sales channels'
+      });
+    }
+    
+    if (queryLower.includes('derivative') || queryLower.includes('collateral')) {
+      suggestions.push({
+        type: 'table',
+        title: 'Derivatives and Collaterals',
+        description: 'Derivatives and collateral exposure data',
+        columns: ['N_RPT_ID', 'V_REPORT_TBL_NM', 'F_INTR_IN', 'V_LGL_ENT_NM'],
+        reasoning: 'Critical for risk management and regulatory reporting'
+      });
+    }
+    
+    if (queryLower.includes('pricing') || queryLower.includes('price')) {
+      dataProducts.forEach(product => {
+        const priceColumns = product.columns.filter(col => 
+          col.name.toLowerCase().includes('price') || 
+          col.name.toLowerCase().includes('amount') ||
+          col.name.toLowerCase().includes('cost')
+        );
+        if (priceColumns.length > 0) {
+          suggestions.push({
+            type: 'pricing',
+            title: product.name,
+            description: 'Contains pricing information',
+            columns: priceColumns.map(col => col.name),
+            reasoning: `Has ${priceColumns.length} pricing-related columns for financial analysis`
+          });
+        }
+      });
+    }
+    
+    if (queryLower.includes('sensitive') || queryLower.includes('high sensitivity')) {
+      dataProducts.forEach(product => {
+        if (product.sensitivity.toLowerCase() === 'high') {
+          const sensitiveColumns = product.columns.filter(col => col.sensitivity === 'high');
+          if (sensitiveColumns.length > 0) {
+            suggestions.push({
+              type: 'sensitivity',
+              title: product.name,
+              description: 'High sensitivity data product',
+              columns: sensitiveColumns.map(col => col.name),
+              reasoning: `Contains ${sensitiveColumns.length} high-sensitivity columns requiring special access controls`
+            });
+          }
+        }
+      });
+    }
+    
+    return suggestions.slice(0, 3); // Limit to top 3 suggestions
+  };
+
+  // Handle search processing with useEffect to avoid infinite re-renders
+  useEffect(() => {
+    if (!searchTerm.trim()) {
+      setSearchSuggestions([]);
+      setShowSuggestions(false);
+      setIsSearching(false);
+      return;
+    }
+
+    setIsSearching(true);
+    
+    // Simulate AI processing delay
+    const timeoutId = setTimeout(() => {
+      const suggestions = generateSearchSuggestions(searchTerm);
+      setSearchSuggestions(suggestions);
+      setShowSuggestions(true);
+      setIsSearching(false);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm]);
+
+  const filteredProducts = filterProducts(searchTerm);
+
   const handleProductSelect = (product) => {
     setSelectedProduct(product);
     setShowMetadata(false);
@@ -282,8 +556,9 @@ const DataCatalogInterface = () => {
     setShowFailedJobs(false);
     setShowDataQuality(false);
     setShowMoreOptions(false);
+    setShowSuggestions(false);
   };
-  
+
   const getSensitivityColor = (level) => {
     switch(level.toLowerCase()) {
       case 'high': return 'bg-red-100 text-red-800';
@@ -292,7 +567,7 @@ const DataCatalogInterface = () => {
       default: return 'bg-gray-100 text-gray-800';
     }
   };
-  
+
   // Toggle functions
   const toggleMetadata = () => setShowMetadata(!showMetadata);
   const toggleDescription = () => setShowDescription(!showDescription);
@@ -325,7 +600,7 @@ const DataCatalogInterface = () => {
     setShowMoreOptions(false);
   };
   const toggleMoreOptions = () => setShowMoreOptions(!showMoreOptions);
-  
+
   // Lineage node component
   const LineageNode = ({ node, type }) => {
     const getNodeColor = (nodeType) => {
@@ -344,7 +619,7 @@ const DataCatalogInterface = () => {
       </div>
     );
   };
-  
+
   return (
     <div className="flex flex-col h-full bg-gray-50">
       {/* Header */}
@@ -368,13 +643,101 @@ const DataCatalogInterface = () => {
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search data products..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="What are you searching for today?"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={handleSearchChange}
+                onFocus={handleSearchFocus}
               />
-              <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+              <Search className={`absolute left-3 top-3.5 h-5 w-5 ${isSearching ? 'animate-pulse text-blue-500' : 'text-gray-400'}`} />
+              {isSearching && (
+                <div className="absolute right-3 top-3.5">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
+                </div>
+              )}
             </div>
+            
+            {/* Example queries */}
+            {!searchTerm && (
+              <div className="mt-3">
+                <p className="text-xs text-gray-500 mb-2">Try asking:</p>
+                <div className="flex flex-wrap gap-2">
+                  {exampleQueries.slice(0, 4).map((example, index) => (
+                    <button
+                      key={index}
+                      className="text-xs px-2 py-1 bg-blue-50 text-blue-700 rounded-full hover:bg-blue-100 transition-colors"
+                      onClick={() => handleExampleClick(example)}
+                    >
+                      {example}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Intelligent Suggestions */}
+            {showSuggestions && searchSuggestions.length > 0 && (
+              <div className="mt-4 border border-blue-200 rounded-lg bg-blue-50 p-4">
+                <div className="flex items-center mb-3">
+                  <div className="bg-blue-100 rounded-full p-1 mr-2">
+                    <svg className="h-4 w-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                  </div>
+                  <h4 className="text-sm font-medium text-blue-900">For your query, you might want to explore:</h4>
+                  <button 
+                    className="ml-auto text-blue-500 hover:text-blue-700"
+                    onClick={() => setShowSuggestions(false)}
+                  >
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                
+                <div className="space-y-3">
+                  {searchSuggestions.map((suggestion, index) => (
+                    <div key={index} className="bg-white rounded-lg p-3 border border-blue-200">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center mb-1">
+                            <Database className="h-4 w-4 text-blue-600 mr-2" />
+                            <h5 className="font-medium text-gray-900">{suggestion.title}</h5>
+                            <span className={`ml-2 text-xs px-2 py-1 rounded-full ${
+                              suggestion.type === 'sensitivity' ? 'bg-red-100 text-red-800' : 
+                              suggestion.type === 'pricing' ? 'bg-green-100 text-green-800' :
+                              'bg-blue-100 text-blue-800'
+                            }`}>
+                              {suggestion.type === 'sensitivity' ? 'High Sensitivity' : 
+                               suggestion.type === 'pricing' ? 'Pricing Data' :
+                               'Data Product'}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600 mb-2">{suggestion.description}</p>
+                          <div className="text-xs text-gray-500 mb-2">
+                            <strong>Key columns:</strong> {suggestion.columns.join(', ')}
+                          </div>
+                          <div className="text-xs text-blue-600 bg-blue-50 p-2 rounded">
+                            💡 {suggestion.reasoning}
+                          </div>
+                        </div>
+                        <button 
+                          className="ml-3 text-blue-600 hover:text-blue-800 text-sm font-medium"
+                          onClick={() => {
+                            const product = dataProducts.find(p => p.name === suggestion.title);
+                            if (product) handleProductSelect(product);
+                            setShowSuggestions(false);
+                          }}
+                        >
+                          Explore →
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
             <div className="flex items-center mt-2 text-sm text-gray-600">
               <span>Filters:</span>
               <button className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
@@ -388,49 +751,85 @@ const DataCatalogInterface = () => {
           
           {/* Product List */}
           <div>
-            {filteredProducts.map(product => (
-              <div 
-                key={product.id} 
-                className={`p-4 border-b border-gray-200 cursor-pointer hover:bg-blue-50 ${selectedProduct?.id === product.id ? 'bg-blue-50' : ''}`}
-                onClick={() => handleProductSelect(product)}
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="font-medium text-gray-900">{product.name}</h3>
-                    <p className="text-sm text-gray-600 mt-1">{product.description}</p>
-                  </div>
-                  <span className={`text-xs px-2 py-1 rounded-full ${getSensitivityColor(product.sensitivity)}`}>
-                    {product.sensitivity}
-                  </span>
-                </div>
-                <div className="mt-2 flex items-center text-xs text-gray-500 space-x-4">
-                  <div className="flex items-center">
-                    <Database className="h-4 w-4 mr-1" />
-                    <span>{product.domain}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <User className="h-4 w-4 mr-1" />
-                    <span>{product.owner}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="h-4 w-4 mr-1" />
-                    <span>{product.updateFrequency}</span>
-                  </div>
-                </div>
-                <div className="mt-2">
-                  <div className="w-full bg-gray-200 rounded-full h-1.5">
-                    <div 
-                      className="bg-green-600 h-1.5 rounded-full" 
-                      style={{ width: `${product.quality}%` }}
-                    ></div>
-                  </div>
-                  <div className="flex justify-between text-xs mt-1">
-                    <span>Quality Score</span>
-                    <span>{product.quality}%</span>
-                  </div>
+            {filteredProducts.length === 0 && searchTerm ? (
+              <div className="p-8 text-center">
+                <Search className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No exact matches found</h3>
+                <p className="text-gray-500 mb-4">Try rephrasing your search or use one of our suggested queries above.</p>
+                <div className="text-sm text-gray-400">
+                  Searched for: "{searchTerm}"
                 </div>
               </div>
-            ))}
+            ) : (
+              filteredProducts.map(product => (
+                <div 
+                  key={product.id} 
+                  className={`p-4 border-b border-gray-200 cursor-pointer hover:bg-blue-50 transition-colors ${selectedProduct?.id === product.id ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''}`}
+                  onClick={() => handleProductSelect(product)}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h3 className="font-medium text-gray-900">{product.name}</h3>
+                      <p className="text-sm text-gray-600 mt-1 line-clamp-2">{product.description}</p>
+                    </div>
+                    <span className={`text-xs px-2 py-1 rounded-full flex-shrink-0 ml-2 ${getSensitivityColor(product.sensitivity)}`}>
+                      {product.sensitivity}
+                    </span>
+                  </div>
+                  <div className="mt-2 flex items-center text-xs text-gray-500 space-x-4">
+                    <div className="flex items-center">
+                      <Database className="h-4 w-4 mr-1" />
+                      <span>{product.domain}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <User className="h-4 w-4 mr-1" />
+                      <span>{product.owner}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Clock className="h-4 w-4 mr-1" />
+                      <span>{product.updateFrequency}</span>
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs text-gray-500">Quality Score</span>
+                      <span className="text-xs font-medium text-gray-700">{product.quality}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-1.5">
+                      <div 
+                        className={`h-1.5 rounded-full transition-all duration-300 ${
+                          product.quality >= 95 ? 'bg-green-500' : 
+                          product.quality >= 90 ? 'bg-blue-500' : 
+                          product.quality >= 80 ? 'bg-yellow-500' : 'bg-red-500'
+                        }`} 
+                        style={{ width: `${product.quality}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                  
+                  {/* Show matching columns if search term exists */}
+                  {searchTerm && (
+                    <div className="mt-3 p-2 bg-gray-50 rounded text-xs">
+                      <div className="text-gray-500 mb-1">Matching columns:</div>
+                      <div className="flex flex-wrap gap-1">
+                        {product.columns
+                          .filter(col => 
+                            col.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            col.description.toLowerCase().includes(searchTerm.toLowerCase())
+                          )
+                          .slice(0, 3)
+                          .map((col, idx) => (
+                            <span key={idx} className="px-2 py-1 bg-blue-100 text-blue-800 rounded">
+                              {col.name}
+                            </span>
+                          ))
+                        }
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
           </div>
         </div>
         
@@ -831,16 +1230,13 @@ const DataCatalogInterface = () => {
                         {selectedProduct.columns.map((column, index) => (
                           <tr key={index} className="hover:bg-gray-50">
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600 hover:text-blue-800">
-                              <a 
-                                href="#" 
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  toggleDescription();
-                                }}
+                              <button 
+                                onClick={toggleDescription}
                                 title={column.description}
+                                className="text-left"
                               >
                                 {column.name}
-                              </a>
+                              </button>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                               {column.type}
