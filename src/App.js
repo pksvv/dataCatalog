@@ -6,10 +6,11 @@ import ProductDetailPage from './pages/ProductDetailPage';
 function App() {
   return (
     <div className="App">
-      <Router basename="/dataCatalog">
+      <Router>
         <Routes>
+          <Route path="/dataCatalog" element={<DataCatalogPage />} />
+          <Route path="/dataCatalog/product/:id" element={<ProductDetailPage />} />
           <Route path="/" element={<DataCatalogPage />} />
-          <Route path="/product/:id" element={<ProductDetailPage />} />
         </Routes>
       </Router>
     </div>
