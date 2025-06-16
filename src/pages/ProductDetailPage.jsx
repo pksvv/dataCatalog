@@ -580,7 +580,7 @@ ${product.columns.slice(0, 4).map(col => `        {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <button
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/dataCatalog')}
                 className="flex items-center text-blue-600 hover:text-blue-800 mr-6"
               >
                 <ArrowLeft className="h-5 w-5 mr-2" />

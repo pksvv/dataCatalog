@@ -13,7 +13,7 @@ const ProductList = ({
 
   const handleProductClick = (product) => {
     onProductSelect(product);
-    navigate(`/product/${product.id}`);
+    navigate(`/dataCatalog/product/${product.id}`);
   };
 
   if (products.length === 0 && searchTerm) {
