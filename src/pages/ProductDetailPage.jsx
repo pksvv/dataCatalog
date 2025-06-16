@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Database, Shield, Clock, User, Info, 
   Eye, FileText, BarChart2, DollarSign, 
-  AlertTriangle, Activity, CheckSquare, MoreVertical, ArrowRight, Download, Share, Star
+  AlertTriangle, Activity, CheckSquare, MoreVertical, ArrowRight, Download, Share, Star, Bookmark, Code, Copy
 } from 'lucide-react';
 import { dataProducts } from '../data/dataProducts';
 import { getSensitivityColor } from '../utils/searchUtils';
@@ -12,8 +12,9 @@ const ProductDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('documentation');
   const [showMoreOptions, setShowMoreOptions] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
     const foundProduct = dataProducts.find(p => p.id === parseInt(id));
@@ -420,41 +421,91 @@ const ProductDetailPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <button
                 onClick={() => navigate('/')}
-                className="flex items-center text-gray-600 hover:text-gray-900 mr-4"
+                className="flex items-center text-blue-600 hover:text-blue-800 mr-6"
               >
                 <ArrowLeft className="h-5 w-5 mr-2" />
-                Back to Catalog
+                Data Catalog
               </button>
-              <div className="border-l border-gray-300 pl-4">
-                <h1 className="text-2xl font-bold text-gray-900">{product.name}</h1>
-                <p className="text-sm text-gray-600 mt-1">{product.domain}</p>
-              </div>
             </div>
             
             <div className="flex items-center space-x-3">
-              <button className="flex items-center px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">
-                <Star className="h-4 w-4 mr-2" />
-                Bookmark
+              <button 
+                onClick={() => setIsBookmarked(!isBookmarked)}
+                className={`flex items-center px-4 py-2 text-sm border rounded-lg hover:bg-gray-50 ${
+                  isBookmarked ? 'border-blue-500 text-blue-600 bg-blue-50' : 'border-gray-300 text-gray-700'
+                }`}
+              >
+                <Bookmark className={`h-4 w-4 mr-2 ${isBookmarked ? 'fill-current' : ''}`} />
+                {isBookmarked ? 'Bookmarked' : 'Bookmark'}
               </button>
-              <button className="flex items-center px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">
-                <Share className="h-4 w-4 mr-2" />
-                Share
-              </button>
-              <button className="flex items-center px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">
-                <Download className="h-4 w-4 mr-2" />
-                Export
-              </button>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                Create Data Contract
-              </button>
+            </div>
+          </div>
+          
+          {/* Product Title and Summary */}
+          <div className="mt-6">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">{product.name}</h1>
+            
+            {/* Navigation Breadcrumb */}
+            <div className="flex items-center text-sm text-gray-500 mb-6">
+              <span>Documentation</span>
+              <span className="mx-2">•</span>
+              <span>Usage</span>
+              <span className="mx-2">•</span>
+              <span className={`px-2 py-1 rounded text-xs ${getSensitivityColor(product.sensitivity)}`}>
+                {product.sensitivity}
+              </span>
+            </div>
+            
+            {/* Summary Section */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+              <h2 className="text-xl font-semibold text-gray-900 mb-3">Summary</h2>
+              <div className="text-gray-700 leading-relaxed mb-4">
+                {product.description}
+              </div>
+              
+              {/* Data Specifications */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6">
+                <div>
+                  <div className="text-sm font-medium text-gray-500">Delivery Frequency</div>
+                  <div className="text-sm text-gray-900 mt-1">{product.updateFrequency}</div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-gray-500">Data Quality</div>
+                  <div className="text-sm text-gray-900 mt-1">{product.quality}%</div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-gray-500">Coverage</div>
+                  <div className="text-sm text-gray-900 mt-1">{product.domain}</div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-gray-500">Owner</div>
+                  <div className="text-sm text-gray-900 mt-1">{product.owner}</div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Premium Badge */}
+            <div className="bg-gradient-to-r from-purple-500 to-blue-600 text-white px-4 py-2 rounded-lg inline-block mb-6">
+              <span className="font-medium">Premium</span>
+            </div>
+            
+            {/* Login Message */}
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-8">
+              <div className="text-yellow-800">
+                <strong>Log in with your Data Platform account to view pricing information</strong>
+              </div>
+              <div className="mt-3 space-x-3">
+                <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Login</button>
+                <button className="border border-blue-600 text-blue-600 px-4 py-2 rounded hover:bg-blue-50">Sign Up</button>
+              </div>
             </div>
           </div>
         </div>
@@ -464,10 +515,11 @@ const ProductDetailPage = () => {
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6">
           <nav className="flex space-x-8">
-            <TabButton tabId="overview" label="Overview" isActive={activeTab === 'overview'} onClick={setActiveTab} />
+            <TabButton tabId="documentation" label="Documentation" isActive={activeTab === 'documentation'} onClick={setActiveTab} />
+            <TabButton tabId="usage" label="Usage" isActive={activeTab === 'usage'} onClick={setActiveTab} />
             <TabButton tabId="schema" label="Schema" isActive={activeTab === 'schema'} onClick={setActiveTab} />
+            <TabButton tabId="api" label="API" isActive={activeTab === 'api'} onClick={setActiveTab} />
             <TabButton tabId="lineage" label="Lineage" isActive={activeTab === 'lineage'} onClick={setActiveTab} />
-            <TabButton tabId="usage" label="Usage & Performance" isActive={activeTab === 'usage'} onClick={setActiveTab} />
             <TabButton tabId="monitoring" label="Monitoring" isActive={activeTab === 'monitoring'} onClick={setActiveTab} />
           </nav>
         </div>
