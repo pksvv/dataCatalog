@@ -709,7 +709,7 @@ ${product.columns.slice(0, 4).map(col => `        {
                     </div>
                   </div>
                   <button 
-                    onClick={() => navigate(`/product/${recommendedProduct.id}`)}
+                    onClick={() => navigate(`/dataCatalog/product/${recommendedProduct.id}`)}
                     className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors"
                   >
                     View Details
