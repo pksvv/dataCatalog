@@ -1,9 +1,17 @@
-import MainApplication from './MainApplication';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import DataCatalogPage from './pages/DataCatalogPage';
+import ProductDetailPage from './pages/ProductDetailPage';
 
 function App() {
   return (
     <div className="App">
-      <MainApplication />
+      <Router>
+        <Routes>
+          <Route path="/" element={<DataCatalogPage />} />
+          <Route path="/product/:id" element={<ProductDetailPage />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
