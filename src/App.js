@@ -6,7 +6,7 @@ import ProductDetailPage from './pages/ProductDetailPage';
 function App() {
   return (
     <div className="App">
-      <Router>
+      <Router basename="/dataCatalog">
         <Routes>
           <Route path="/" element={<DataCatalogPage />} />
           <Route path="/product/:id" element={<ProductDetailPage />} />

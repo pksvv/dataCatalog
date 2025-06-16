@@ -65,105 +65,257 @@ const ProductDetailPage = () => {
 
   const renderTabContent = () => {
     switch(activeTab) {
-      case 'overview':
+      case 'documentation':
         return (
           <div className="space-y-8">
-            {/* Key Metrics Cards */}
-            <div className="grid grid-cols-4 gap-6">
-              <div className="bg-white rounded-lg border border-gray-200 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600">Quality Score</p>
-                    <p className="text-3xl font-bold text-gray-900 mt-1">{product.quality}%</p>
-                  </div>
-                  <div className={`w-16 h-16 rounded-full flex items-center justify-center ${
-                    product.quality >= 95 ? 'bg-green-100' : 
-                    product.quality >= 90 ? 'bg-blue-100' : 
-                    'bg-yellow-100'
-                  }`}>
-                    <BarChart2 className={`w-8 h-8 ${
-                      product.quality >= 95 ? 'text-green-600' : 
-                      product.quality >= 90 ? 'text-blue-600' : 
-                      'text-yellow-600'
-                    }`} />
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg border border-gray-200 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600">Monthly Queries</p>
-                    <p className="text-3xl font-bold text-gray-900 mt-1">{product.usage?.monthlyQueries || 'N/A'}</p>
-                  </div>
-                  <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
-                    <Activity className="w-8 h-8 text-purple-600" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg border border-gray-200 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600">Active Contracts</p>
-                    <p className="text-3xl font-bold text-gray-900 mt-1">{product.usage?.activeContracts || 'N/A'}</p>
-                  </div>
-                  <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center">
-                    <FileText className="w-8 h-8 text-indigo-600" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg border border-gray-200 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600">Monthly Cost</p>
-                    <p className="text-3xl font-bold text-gray-900 mt-1">{product.cost?.monthlyTotal || 'N/A'}</p>
-                  </div>
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                    <DollarSign className="w-8 h-8 text-green-600" />
-                  </div>
+            {/* Supporting Documents */}
+            <div className="bg-white">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Supporting Documents</h2>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-blue-600 mb-2">Documentation</h3>
+                  <ul className="space-y-1 text-blue-600">
+                    <li><a href="#" className="hover:underline">Product Overview</a></li>
+                    <li><a href="#" className="hover:underline">Coverage & Data Organization</a></li>
+                    <li><a href="#" className="hover:underline">Column Definitions</a></li>
+                    <li><a href="#" className="hover:underline">Getting started with the API</a></li>
+                  </ul>
                 </div>
               </div>
             </div>
-
-            {/* Product Information */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Product Information</h3>
-              <div className="grid grid-cols-3 gap-6">
-                <div>
-                  <div className="flex items-center text-sm text-gray-600 mb-2">
-                    <User className="h-4 w-4 mr-2" />
-                    <span>Owner</span>
-                  </div>
-                  <p className="font-medium text-gray-900">{product.owner}</p>
-                </div>
-                <div>
-                  <div className="flex items-center text-sm text-gray-600 mb-2">
-                    <Clock className="h-4 w-4 mr-2" />
-                    <span>Update Frequency</span>
-                  </div>
-                  <p className="font-medium text-gray-900">{product.updateFrequency}</p>
-                </div>
-                <div>
-                  <div className="flex items-center text-sm text-gray-600 mb-2">
-                    <Shield className="h-4 w-4 mr-2" />
-                    <span>Sensitivity Level</span>
-                  </div>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getSensitivityColor(product.sensitivity)}`}>
-                    {product.sensitivity}
-                  </span>
-                </div>
+            
+            {/* Product Overview */}
+            <div className="bg-white">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Product Overview</h2>
+              <h3 className="text-xl font-semibold text-gray-800 mb-3">Overview</h3>
+              <p className="text-gray-700 leading-relaxed mb-6">
+                {product.description} This data product provides comprehensive information with 
+                high quality standards and reliable delivery mechanisms.
+              </p>
+              
+              <div className="mb-6">
+                <h4 className="font-semibold text-gray-800 mb-2">Delivery:</h4>
+                <ul className="list-disc list-inside space-y-1 text-gray-700">
+                  <li>Primary Updates: {product.updateFrequency}</li>
+                  <li>Quality Score: {product.quality}% accuracy and completeness</li>
+                  <li>Data Sensitivity: {product.sensitivity} level security classification</li>
+                </ul>
               </div>
+              
+              <h3 className="text-xl font-semibold text-gray-800 mb-3">Benefits & Features</h3>
+              <ul className="list-disc list-inside space-y-2 text-gray-700 mb-6">
+                <li><strong>Normalized data format:</strong> Consistent data types and formats across all sources</li>
+                <li><strong>Complete coverage:</strong> {product.domain} with comprehensive data points</li>
+                <li><strong>High quality:</strong> {product.quality}% quality score with automated validation</li>
+                <li><strong>Real-time updates:</strong> {product.updateFrequency} refresh cycle</li>
+              </ul>
+              
+              <h3 className="text-xl font-semibold text-gray-800 mb-3">Data Provider</h3>
+              <p className="text-gray-700 leading-relaxed">
+                <strong>{product.owner}</strong> is a leading provider of enterprise data solutions. 
+                This data offering is part of our comprehensive suite of products designed to provide 
+                significant value to customers in making informed decisions.
+              </p>
             </div>
-
-            {/* Description */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Description</h3>
-              <p className="text-gray-700 leading-relaxed">{product.description}</p>
+            
+            {/* Coverage & Data Organization */}
+            <div className="bg-white">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Coverage & Data Organization</h2>
+              <h3 className="text-xl font-semibold text-gray-800 mb-3">Coverage</h3>
+              <p className="text-gray-700 mb-6">{product.domain} with comprehensive data across all relevant sources.</p>
+              
+              <h3 className="text-xl font-semibold text-gray-800 mb-3">Data Organization</h3>
+              <p className="text-gray-700 mb-4">
+                This product can be accessed via the Data Platform API.
+              </p>
+              <p className="text-gray-700 mb-6">
+                To programmatically access individual tables in this product, you need the Table Code 
+                for the specific table you are interested in. The Table Codes for all tables in this product are listed below.
+              </p>
+              
+              {/* Table Codes */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <table className="min-w-full">
+                  <thead>
+                    <tr className="border-b border-gray-200">
+                      <th className="text-left py-2 text-sm font-semibold text-gray-700">Table</th>
+                      <th className="text-left py-2 text-sm font-semibold text-gray-700">Table Code</th>
+                      <th className="text-left py-2 text-sm font-semibold text-gray-700">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-gray-100">
+                      <td className="py-2 text-sm text-gray-900">{product.name}</td>
+                      <td className="py-2 text-sm text-blue-600 font-mono">DP/{product.id}</td>
+                      <td className="py-2 text-sm text-gray-700">{product.description}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         );
+        
+      case 'usage':
+        return (
+          <div className="space-y-8">
+            {/* API Usage Examples */}
+            <div className="bg-white">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Usage Examples</h2>
+              <p className="text-gray-700 mb-6">
+                You can try any of these API calls by pasting them into your browser window. 
+                Users with programming experience can use wget or curl to run these calls from the command line.
+              </p>
+              
+              <div className="space-y-6">
+                {/* Filter Examples */}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">FILTER BY DATE AND CRITERIA</h3>
+                  <div className="bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm overflow-x-auto">
+                    <code>
+                      https://api.dataplatform.com/v1/products/DP/{product.id}?date.eq=2024-03-20&filter.eq=value&api_key=&lt;YOURAPIKEY&gt;
+                    </code>
+                  </div>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">FILTER BY DATE RANGE</h3>
+                  <div className="bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm overflow-x-auto">
+                    <code>
+                      https://api.dataplatform.com/v1/products/DP/{product.id}?date.gt=2024-02-01&date.lt=2024-03-20&api_key=&lt;YOURAPIKEY&gt;
+                    </code>
+                  </div>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">FILTER COLUMNS</h3>
+                  <div className="bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm overflow-x-auto">
+                    <code>
+                      https://api.dataplatform.com/v1/products/DP/{product.id}?columns={product.columns.slice(0,3).map(c => c.name).join(',')}&api_key=&lt;YOURAPIKEY&gt;
+                    </code>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Parameters Table */}
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">FILTER OPERATORS</h3>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full border border-gray-200 rounded-lg">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b">Filter</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b">Required</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[
+                        { filter: '.eq=', required: 'yes', desc: 'Return values equal to the requested value' },
+                        { filter: '.lt=', required: 'no', desc: 'Return values less than the requested value' },
+                        { filter: '.gt=', required: 'no', desc: 'Return values greater than the requested value' },
+                        { filter: '.in[]=', required: 'no', desc: 'Return values equal to specified comma separated values' }
+                      ].map((row, idx) => (
+                        <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                          <td className="px-4 py-3 text-sm font-mono text-gray-900 border-b">{row.filter}</td>
+                          <td className="px-4 py-3 text-sm text-gray-700 border-b">{row.required}</td>
+                          <td className="px-4 py-3 text-sm text-gray-700 border-b">{row.desc}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              
+              {/* Example Response */}
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">EXAMPLE RESPONSE</h3>
+                <div className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto">
+                  <pre>{`{
+  "data_product": {
+    "code": "DP/${product.id}",
+    "status": "SUCCEEDED",
+    "total_records": ${product.usage?.monthlyQueries || '1.2M'},
+    "schema": {
+      "fields": [
+${product.columns.slice(0, 4).map(col => `        {
+          "name": "${col.name}",
+          "type": "${col.type}",
+          "description": "${col.description}"
+        }`).join(',\n')}
+      ]
+    },
+    "data": [
+      // Sample data rows...
+    ]
+  }
+}`}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+        
+      case 'api':
+        return (
+          <div className="space-y-8">
+            {/* API Documentation */}
+            <div className="bg-white">
+              <div className="mb-6">
+                <div className="flex space-x-4 border-b border-gray-200">
+                  <button className="px-4 py-2 border-b-2 border-blue-500 text-blue-600 font-medium">API</button>
+                  <button className="px-4 py-2 text-gray-500 hover:text-gray-700">Python</button>
+                  <button className="px-4 py-2 text-gray-500 hover:text-gray-700">R</button>
+                  <button className="px-4 py-2 text-gray-500 hover:text-gray-700">Excel</button>
+                </div>
+              </div>
+              
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                <h3 className="font-semibold text-yellow-800 mb-2">Authentication</h3>
+                <p className="text-yellow-800">You must log in to view usage examples and make API calls.</p>
+                <div className="mt-3 space-x-3">
+                  <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Login</button>
+                  <button className="border border-blue-600 text-blue-600 px-4 py-2 rounded hover:bg-blue-50">Sign Up</button>
+                </div>
+              </div>
+              
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <h3 className="font-semibold text-blue-800 mb-2">Getting started with the API</h3>
+                <p className="text-blue-800 mb-2">Free sample enabled</p>
+                <p className="text-blue-700 text-sm">A subset of this data is available for testing without a subscription. To view the full data, you must subscribe to the product.</p>
+                <button className="mt-3 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Subscribe</button>
+              </div>
+              
+              {/* API Examples */}
+              <div>
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">Usage Examples</h3>
+                <p className="text-gray-700 mb-6">
+                  You can try any of these API calls by pasting them into your browser window. 
+                  Users with programming experience can use wget or curl to run these calls from the command line.
+                </p>
+                
+                <div className="space-y-4">
+                  <div className="bg-gray-900 text-gray-100 p-4 rounded-lg">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm text-gray-400">GET Request</span>
+                      <button className="text-gray-400 hover:text-white">
+                        <Copy className="h-4 w-4" />
+                      </button>
+                    </div>
+                    <code className="text-sm font-mono">
+                      curl -X GET "https://api.dataplatform.com/v1/products/DP/{product.id}" \
+                      <br className="hidden sm:block" />
+                      &nbsp;&nbsp;&nbsp;&nbsp;-H "Authorization: Bearer YOUR_API_KEY"
+                    </code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+        
+      case 'overview':
+        return null; // Overview tab removed as per Nasdaq structure
 
       case 'schema':
         return (
@@ -528,6 +680,56 @@ const ProductDetailPage = () => {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
         {renderTabContent()}
+        
+        {/* Recommended Datasets Section */}
+        <div className="mt-16 border-t border-gray-200 pt-12">
+          <h2 className="text-2xl font-bold text-gray-900 mb-8">Recommended Datasets</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {dataProducts
+              .filter(p => p.id !== product.id)
+              .slice(0, 3)
+              .map(recommendedProduct => (
+                <div key={recommendedProduct.id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="text-lg font-semibold text-gray-900">{recommendedProduct.name}</h3>
+                    <div className="flex space-x-1">
+                      <span className="bg-gradient-to-r from-purple-500 to-blue-600 text-white px-2 py-1 rounded text-xs font-medium">Premium</span>
+                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">API</span>
+                    </div>
+                  </div>
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">{recommendedProduct.description}</p>
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center text-gray-500">
+                      <Database className="h-4 w-4 mr-1" />
+                      <span>{recommendedProduct.domain}</span>
+                    </div>
+                    <div className="flex items-center text-gray-500">
+                      <BarChart2 className="h-4 w-4 mr-1" />
+                      <span>{recommendedProduct.quality}%</span>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => navigate(`/product/${recommendedProduct.id}`)}
+                    className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors"
+                  >
+                    View Details
+                  </button>
+                </div>
+              ))
+            }
+          </div>
+          
+          {/* Login CTA */}
+          <div className="mt-12 bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">
+              Log in with your Data Platform account to view more datasets
+            </h3>
+            <div className="space-x-4">
+              <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">Login</button>
+              <button className="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg hover:bg-blue-50">Sign Up</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
