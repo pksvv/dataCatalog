@@ -1,4 +1,4 @@
-// src/discovery/data/mockDatasets.js - Enhanced with dataset schemas
+// src/discovery/data/mockDatasets.js - Enhanced with regulatory reporting datasets
 
 export const mockDatasets = [
   {
@@ -293,6 +293,355 @@ export const mockDatasets = [
     ],
     relatedDatasets: ['Global ESG Scores', 'Market Demographics'],
     qnaResponse: 'Alternative Data Signals aggregates non-traditional data sources to provide unique market insights and early indicators for investment strategies and business intelligence.'
+  },
+  // NEW REGULATORY REPORTING DATASETS
+  {
+    id: 'ds-009',
+    title: 'FIN AR Daily Transaction Overview',
+    category: 'Regulatory Reporting',
+    description: 'Comprehensive daily transaction data for regulatory reporting including primary and offset account hierarchies, inter-entity transactions, and financial accounting hub integration for compliance and audit purposes.',
+    tags: ['Y9C', 'FFIEC 031', 'FR Y-9C', 'Call Report', 'Regulatory Data', 'Daily Transaction Data'],
+    coverage: 'US Banking entities and subsidiaries',
+    historicalData: 'Historical data from 2018',
+    deliveryOptions: [
+      { name: 'Type A API', description: 'Real-time transaction feed' },
+      { name: 'Type B Feed', description: 'Daily batch exports for regulatory filing' },
+      { name: 'Type C Platform', description: 'Regulatory reporting dashboard' },
+      { name: 'Type D Gateway', description: 'Direct FFIEC submission feed' }
+    ],
+    metadata: {
+      updateFrequency: 'Daily',
+      dataFormat: 'JSON, CSV, XML, XBRL',
+      coverage: 'All regulated entities',
+      regions: 'United States',
+      startDate: '2018-01-01',
+      lastUpdated: '2024-12-15'
+    },
+    schema: [
+      { name: 'prim_rc_ds', type: 'string', description: 'Description of Primary Responsibility Center' },
+      { name: 'cstone_feed_key', type: 'integer', description: 'Unique nine-digit feed key for data provider tracking' },
+      { name: 'prim_ent_nm', type: 'string', description: 'Primary Legal Entity Name/Code for regulatory identification' },
+      { name: 'trans_dt', type: 'date', description: 'Transaction date for regulatory timeline compliance' },
+      { name: 'srce_sys', type: 'string', description: 'Source System from Central Asset Registry' },
+      { name: 'ofs_acct_type', type: 'string', description: 'Account type classification (A=Asset, E=Expense, R=Revenue, L=Liability, O=Equity)' },
+      { name: 'cyc_cut_dt', type: 'date', description: 'Statement cycle cut date for reporting periods' },
+      { name: 'prod_cd', type: 'string', description: 'Product code for regulatory product classification' },
+      { name: 'appl_rgn_cd', type: 'string', description: 'Globestar region code for geographic reporting' },
+      { name: 'adj_type_cd', type: 'string', description: 'Adjustment type code for transaction classification' }
+    ],
+    relatedDatasets: ['Card Member Merchant Profitability', 'CCAR Stress Testing Data', 'Basel III Capital Reports'],
+    qnaResponse: 'FIN AR Daily Transaction Overview provides comprehensive daily transaction data essential for regulatory compliance, supporting Y9C, FFIEC 031, and other regulatory reporting requirements with detailed account hierarchies and inter-entity tracking.'
+  },
+  {
+    id: 'ds-010',
+    title: 'FIN Card Member Merchant Profitability',
+    category: 'Regulatory Reporting',
+    description: 'Detailed card member and merchant profitability analytics for regulatory capital calculations, stress testing scenarios, and portfolio risk assessment required for banking supervision.',
+    tags: ['CCAR', 'DFAST', 'Basel III', 'Stress Testing', 'Portfolio Analytics', 'Capital Planning'],
+    coverage: 'Card portfolio and merchant network',
+    historicalData: 'Historical data from 2016',
+    deliveryOptions: [
+      { name: 'Type A API', description: 'Real-time profitability metrics' },
+      { name: 'Type B Feed', description: 'Quarterly stress testing extracts' },
+      { name: 'Type C Platform', description: 'CCAR analytics platform' },
+      { name: 'Type D Gateway', description: 'Fed supervisory data feeds' }
+    ],
+    metadata: {
+      updateFrequency: 'Daily',
+      dataFormat: 'JSON, CSV, SAS, XBRL',
+      coverage: 'Card member portfolio',
+      regions: 'United States',
+      startDate: '2016-01-01',
+      lastUpdated: '2024-12-14'
+    },
+    schema: [
+      { name: 'card_portfo', type: 'string', description: 'Portfolio classification for regulatory segmentation' },
+      { name: 'oracle_mer_hier_lvl2', type: 'string', description: 'Merchant industry hierarchy for risk classification' },
+      { name: 'oracle_mer_hier_lvl3', type: 'string', description: 'T&E vs G&S classification for regulatory reporting' },
+      { name: 'in_pers_disc_revn_usd_am', type: 'number', description: 'In-person discount revenue for income statement reporting' },
+      { name: 'in_pers_dbv_usd_am', type: 'number', description: 'In-person discount billed volume for portfolio metrics' },
+      { name: 'cm13', type: 'string', description: 'Card member identifier for privacy-compliant analytics' },
+      { name: 'acct_tenure', type: 'string', description: 'Account tenure for portfolio vintage analysis' },
+      { name: 'fico_score', type: 'string', description: 'FICO score for credit risk assessment' },
+      { name: 'acct_seg', type: 'string', description: 'Account segment (MM, LM, GCG) for regulatory classification' },
+      { name: 'drm_corp_clnt_seg', type: 'string', description: 'Corporate client segment for business line reporting' }
+    ],
+    relatedDatasets: ['Daily Transaction Overview', 'Credit Loss Provisioning', 'Liquidity Coverage Ratio'],
+    qnaResponse: 'FIN Card Member Merchant Profitability delivers essential portfolio analytics for regulatory stress testing, CCAR submissions, and Basel III capital calculations with detailed card member and merchant profitability metrics.'
+  },
+  {
+    id: 'ds-011',
+    title: 'CCAR Stress Testing Data',
+    category: 'Regulatory Reporting',
+    description: 'Comprehensive Comprehensive Capital Analysis and Review (CCAR) stress testing dataset including baseline, adverse, and severely adverse economic scenarios with projected capital ratios and loss estimates.',
+    tags: ['CCAR', 'DFAST', 'Fed Stress Test', 'Capital Planning', 'Scenario Analysis', 'Basel III'],
+    coverage: 'All CCAR-subject institutions',
+    historicalData: 'Historical data from 2013',
+    deliveryOptions: [
+      { name: 'Type A API', description: 'Real-time stress metrics' },
+      { name: 'Type B Feed', description: 'Annual CCAR submission extracts' },
+      { name: 'Type C Platform', description: 'Stress testing analytics platform' },
+      { name: 'Type D Gateway', description: 'Federal Reserve submission portal' }
+    ],
+    metadata: {
+      updateFrequency: 'Quarterly',
+      dataFormat: 'CSV, SAS, XBRL, XML',
+      coverage: 'Large Bank Holding Companies',
+      regions: 'United States',
+      startDate: '2013-01-01',
+      lastUpdated: '2024-12-10'
+    },
+    schema: [
+      { name: 'institution_id', type: 'string', description: 'Bank holding company identifier' },
+      { name: 'scenario_type', type: 'string', description: 'Baseline, Adverse, or Severely Adverse scenario' },
+      { name: 'projection_quarter', type: 'string', description: 'Forecast quarter (Q1 2025, etc.)' },
+      { name: 'tier1_capital_ratio', type: 'number', description: 'Projected Tier 1 capital ratio' },
+      { name: 'common_equity_tier1_ratio', type: 'number', description: 'CET1 ratio projection' },
+      { name: 'leverage_ratio', type: 'number', description: 'Supplementary leverage ratio' },
+      { name: 'total_losses', type: 'number', description: 'Projected total losses under scenario' },
+      { name: 'credit_losses', type: 'number', description: 'Credit loss provisions' },
+      { name: 'trading_losses', type: 'number', description: 'Trading and counterparty losses' },
+      { name: 'pre_provision_net_revenue', type: 'number', description: 'PPNR under stress scenario' },
+      { name: 'unemployment_rate', type: 'number', description: 'Scenario unemployment rate assumption' },
+      { name: 'gdp_growth_rate', type: 'number', description: 'Scenario GDP growth assumption' }
+    ],
+    relatedDatasets: ['Basel III Capital Reports', 'Liquidity Coverage Ratio', 'Resolution Planning Data'],
+    qnaResponse: 'CCAR Stress Testing Data provides comprehensive stress testing scenarios and projections required for Federal Reserve CCAR submissions, including capital ratios, loss estimates, and economic scenario modeling.'
+  },
+  {
+    id: 'ds-012',
+    title: 'Basel III Capital Reports',
+    category: 'Regulatory Reporting',
+    description: 'Basel III regulatory capital calculations including Common Equity Tier 1, Tier 1, Total Capital ratios, and regulatory adjustments for international banking supervision compliance.',
+    tags: ['Basel III', 'Capital Adequacy', 'BIS', 'Tier 1 Capital', 'RWA', 'International Banking'],
+    coverage: 'Internationally active banks',
+    historicalData: 'Historical data from 2014',
+    deliveryOptions: [
+      { name: 'Type A API', description: 'Daily capital ratio monitoring' },
+      { name: 'Type B Feed', description: 'Quarterly Basel III submissions' },
+      { name: 'Type C Platform', description: 'Capital management dashboard' },
+      { name: 'Type D Gateway', description: 'BIS reporting portal integration' }
+    ],
+    metadata: {
+      updateFrequency: 'Daily',
+      dataFormat: 'XML, XBRL, CSV',
+      coverage: 'Global systemically important banks',
+      regions: 'Global',
+      startDate: '2014-01-01',
+      lastUpdated: '2024-12-13'
+    },
+    schema: [
+      { name: 'bank_id', type: 'string', description: 'Bank identifier for regulatory reporting' },
+      { name: 'reporting_date', type: 'date', description: 'Basel III reporting date' },
+      { name: 'cet1_capital', type: 'number', description: 'Common Equity Tier 1 capital amount' },
+      { name: 'tier1_capital', type: 'number', description: 'Total Tier 1 capital' },
+      { name: 'total_capital', type: 'number', description: 'Total regulatory capital' },
+      { name: 'risk_weighted_assets', type: 'number', description: 'Total risk-weighted assets' },
+      { name: 'cet1_ratio', type: 'number', description: 'CET1 capital ratio percentage' },
+      { name: 'tier1_ratio', type: 'number', description: 'Tier 1 capital ratio percentage' },
+      { name: 'total_capital_ratio', type: 'number', description: 'Total capital ratio percentage' },
+      { name: 'leverage_ratio', type: 'number', description: 'Basel III leverage ratio' },
+      { name: 'credit_risk_rwa', type: 'number', description: 'Credit risk weighted assets' },
+      { name: 'operational_risk_rwa', type: 'number', description: 'Operational risk weighted assets' },
+      { name: 'market_risk_rwa', type: 'number', description: 'Market risk weighted assets' }
+    ],
+    relatedDatasets: ['CCAR Stress Testing Data', 'Liquidity Coverage Ratio', 'Net Stable Funding Ratio'],
+    qnaResponse: 'Basel III Capital Reports provides comprehensive regulatory capital calculations and ratios required for international banking supervision, ensuring compliance with global capital adequacy standards.'
+  },
+  {
+    id: 'ds-013',
+    title: 'FFIEC Call Report Data',
+    category: 'Regulatory Reporting',
+    description: 'Federal Financial Institutions Examination Council Call Report data including balance sheet, income statement, and regulatory schedules for US banking institutions quarterly filings.',
+    tags: ['FFIEC 031', 'FFIEC 041', 'Call Report', 'FDIC', 'OCC', 'Fed Reports', 'Quarterly Filing'],
+    coverage: 'All FDIC-insured institutions',
+    historicalData: 'Historical data from 2001',
+    deliveryOptions: [
+      { name: 'Type A API', description: 'Real-time call report access' },
+      { name: 'Type B Feed', description: 'Quarterly filing extracts' },
+      { name: 'Type C Platform', description: 'FFIEC central data repository' },
+      { name: 'Type D Gateway', description: 'Direct FDIC/OCC submission' }
+    ],
+    metadata: {
+      updateFrequency: 'Quarterly',
+      dataFormat: 'SDF, CSV, XML, XBRL',
+      coverage: '4,800+ US banks',
+      regions: 'United States',
+      startDate: '2001-01-01',
+      lastUpdated: '2024-09-30'
+    },
+    schema: [
+      { name: 'fdic_cert_id', type: 'string', description: 'FDIC Certificate Number' },
+      { name: 'institution_name', type: 'string', description: 'Bank legal name' },
+      { name: 'reporting_date', type: 'date', description: 'Call report quarter end date' },
+      { name: 'total_assets', type: 'number', description: 'Total assets (RCFD2170)' },
+      { name: 'total_deposits', type: 'number', description: 'Total deposits (RCFD2200)' },
+      { name: 'total_loans', type: 'number', description: 'Total loans and leases (RCFD1400)' },
+      { name: 'tier1_capital', type: 'number', description: 'Tier 1 capital (RCFD8274)' },
+      { name: 'net_income', type: 'number', description: 'Net income (RIAD4340)' },
+      { name: 'charge_offs', type: 'number', description: 'Net charge-offs (RIAD4635)' },
+      { name: 'provision_credit_losses', type: 'number', description: 'Provision for credit losses (RIAD4230)' },
+      { name: 'nonperforming_loans', type: 'number', description: 'Nonaccrual loans (RCFD1407)' },
+      { name: 'risk_weighted_assets', type: 'number', description: 'Risk-weighted assets (RCFDA223)' }
+    ],
+    relatedDatasets: ['Y9C Bank Holding Company Reports', 'FDIC SDI Data', 'OCC Quarterly Derivatives Report'],
+    qnaResponse: 'FFIEC Call Report Data provides comprehensive quarterly financial and regulatory data for all US banking institutions, essential for supervisory monitoring, peer analysis, and regulatory compliance.'
+  },
+  {
+    id: 'ds-014',
+    title: 'FR Y-9C Bank Holding Company Reports',
+    category: 'Regulatory Reporting',
+    description: 'Federal Reserve Y-9C consolidated financial statements for bank holding companies including parent company only and consolidated subsidiary data for supervision and regulation.',
+    tags: ['FR Y-9C', 'Y9C', 'BHC Reports', 'Federal Reserve', 'Bank Holding Company', 'Consolidated Reports'],
+    coverage: 'Bank holding companies with $1B+ assets',
+    historicalData: 'Historical data from 1986',
+    deliveryOptions: [
+      { name: 'Type A API', description: 'Real-time BHC data access' },
+      { name: 'Type B Feed', description: 'Quarterly Y-9C submissions' },
+      { name: 'Type C Platform', description: 'Federal Reserve reporting portal' },
+      { name: 'Type D Gateway', description: 'Supervisory data integration' }
+    ],
+    metadata: {
+      updateFrequency: 'Quarterly',
+      dataFormat: 'FRY9C, CSV, XML, XBRL',
+      coverage: '250+ large BHCs',
+      regions: 'United States',
+      startDate: '1986-01-01',
+      lastUpdated: '2024-09-30'
+    },
+    schema: [
+      { name: 'rssd_id', type: 'string', description: 'Federal Reserve RSSD identifier' },
+      { name: 'bhc_name', type: 'string', description: 'Bank holding company name' },
+      { name: 'reporting_date', type: 'date', description: 'Report quarter end date' },
+      { name: 'total_assets_bhc', type: 'number', description: 'Total BHC assets consolidated (BHCK2170)' },
+      { name: 'total_securities', type: 'number', description: 'Securities held (BHCK1754)' },
+      { name: 'total_loans_bhc', type: 'number', description: 'Total loans at BHC level (BHCK1400)' },
+      { name: 'goodwill', type: 'number', description: 'Goodwill and intangibles (BHCK3163)' },
+      { name: 'total_equity_capital', type: 'number', description: 'Total equity capital (BHCK3210)' },
+      { name: 'net_income_bhc', type: 'number', description: 'Net income consolidated (BHCK4340)' },
+      { name: 'noninterest_income', type: 'number', description: 'Noninterest income (BHCK4079)' },
+      { name: 'trading_revenue', type: 'number', description: 'Trading account revenue (BHCK4069)' },
+      { name: 'investment_banking_fees', type: 'number', description: 'Investment banking fees (BHCKA220)' }
+    ],
+    relatedDatasets: ['FFIEC Call Report Data', 'FR Y-14 CCAR Data', 'FR Y-15 Debt Reports'],
+    qnaResponse: 'FR Y-9C Bank Holding Company Reports provide comprehensive consolidated financial data for large bank holding companies, essential for Federal Reserve supervision and systemic risk monitoring.'
+  },
+  {
+    id: 'ds-015',
+    title: 'Liquidity Coverage Ratio (LCR) Reports',
+    category: 'Regulatory Reporting',
+    description: 'Basel III Liquidity Coverage Ratio regulatory reports including high-quality liquid assets, cash outflows, and inflows calculations for liquidity risk management and regulatory compliance.',
+    tags: ['LCR', 'Basel III', 'Liquidity Risk', 'HQLA', 'Cash Flows', 'Liquidity Management'],
+    coverage: 'Large banking organizations',
+    historicalData: 'Historical data from 2015',
+    deliveryOptions: [
+      { name: 'Type A API', description: 'Daily LCR monitoring' },
+      { name: 'Type B Feed', description: 'Monthly LCR regulatory submissions' },
+      { name: 'Type C Platform', description: 'Liquidity risk dashboard' },
+      { name: 'Type D Gateway', description: 'Central bank reporting integration' }
+    ],
+    metadata: {
+      updateFrequency: 'Daily',
+      dataFormat: 'XML, CSV, XBRL',
+      coverage: 'Large banks and BHCs',
+      regions: 'Global',
+      startDate: '2015-01-01',
+      lastUpdated: '2024-12-14'
+    },
+    schema: [
+      { name: 'institution_id', type: 'string', description: 'Bank identifier for LCR reporting' },
+      { name: 'reporting_date', type: 'date', description: 'LCR calculation date' },
+      { name: 'total_hqla', type: 'number', description: 'Total high-quality liquid assets' },
+      { name: 'level1_assets', type: 'number', description: 'Level 1 HQLA (0% haircut)' },
+      { name: 'level2a_assets', type: 'number', description: 'Level 2A HQLA (15% haircut)' },
+      { name: 'level2b_assets', type: 'number', description: 'Level 2B HQLA (25-50% haircut)' },
+      { name: 'total_net_cash_outflows', type: 'number', description: 'Total net cash outflows 30-day' },
+      { name: 'retail_deposits_outflow', type: 'number', description: 'Retail deposit outflow rate' },
+      { name: 'wholesale_funding_outflow', type: 'number', description: 'Wholesale funding outflow' },
+      { name: 'lcr_ratio', type: 'number', description: 'LCR ratio percentage' },
+      { name: 'currency', type: 'string', description: 'Reporting currency' },
+      { name: 'jurisdiction', type: 'string', description: 'Regulatory jurisdiction' }
+    ],
+    relatedDatasets: ['Net Stable Funding Ratio', 'Basel III Capital Reports', 'Stress Testing Data'],
+    qnaResponse: 'Liquidity Coverage Ratio Reports provide essential liquidity risk metrics and regulatory compliance data, ensuring banks maintain adequate liquid assets to meet short-term obligations under stress conditions.'
+  },
+  {
+    id: 'ds-016',
+    title: 'AML Transaction Monitoring Data',
+    category: 'Regulatory Reporting',
+    description: 'Anti-Money Laundering transaction monitoring dataset including suspicious activity detection, customer due diligence records, and regulatory filing requirements for BSA/AML compliance.',
+    tags: ['AML', 'BSA', 'SAR', 'CTR', 'OFAC', 'KYC', 'Transaction Monitoring', 'FinCEN'],
+    coverage: 'All financial institutions',
+    historicalData: 'Historical data from 2010',
+    deliveryOptions: [
+      { name: 'Type A API', description: 'Real-time AML monitoring' },
+      { name: 'Type B Feed', description: 'Daily transaction surveillance' },
+      { name: 'Type C Platform', description: 'AML case management system' },
+      { name: 'Type D Gateway', description: 'FinCEN filing integration' }
+    ],
+    metadata: {
+      updateFrequency: 'Real-time',
+      dataFormat: 'JSON, XML, CSV',
+      coverage: 'All regulated financial institutions',
+      regions: 'United States',
+      startDate: '2010-01-01',
+      lastUpdated: '2024-12-15'
+    },
+    schema: [
+      { name: 'transaction_id', type: 'string', description: 'Unique transaction identifier' },
+      { name: 'customer_id', type: 'string', description: 'Customer identifier (encrypted)' },
+      { name: 'transaction_amount', type: 'number', description: 'Transaction amount in USD' },
+      { name: 'transaction_type', type: 'string', description: 'Wire, ACH, Cash, Check, etc.' },
+      { name: 'risk_score', type: 'number', description: 'AML risk score (0-100)' },
+      { name: 'alert_triggered', type: 'boolean', description: 'Whether AML alert was triggered' },
+      { name: 'ofac_hit', type: 'boolean', description: 'OFAC sanctions list match' },
+      { name: 'pep_status', type: 'string', description: 'Politically exposed person status' },
+      { name: 'country_risk_rating', type: 'string', description: 'High, Medium, Low country risk' },
+      { name: 'sar_filed', type: 'boolean', description: 'Suspicious Activity Report filed' },
+      { name: 'ctr_filed', type: 'boolean', description: 'Currency Transaction Report filed' },
+      { name: 'investigation_status', type: 'string', description: 'Open, Closed, Escalated' }
+    ],
+    relatedDatasets: ['Customer Due Diligence Data', 'OFAC Sanctions Lists', 'Correspondent Banking Reports'],
+    qnaResponse: 'AML Transaction Monitoring Data provides comprehensive anti-money laundering surveillance and compliance data, supporting BSA/AML regulatory requirements and suspicious activity detection.'
+  },
+  {
+    id: 'ds-017',
+    title: 'CECL Credit Loss Modeling Data',
+    category: 'Regulatory Reporting',
+    description: 'Current Expected Credit Loss (CECL) accounting standard implementation data including lifetime loss estimates, economic forecasts, and credit loss provisioning models for GAAP compliance.',
+    tags: ['CECL', 'Credit Losses', 'GAAP', 'FASB', 'Provisioning', 'Lifetime Losses', 'Economic Forecasts'],
+    coverage: 'All financial institutions',
+    historicalData: 'Historical data from 2020',
+    deliveryOptions: [
+      { name: 'Type A API', description: 'Real-time CECL calculations' },
+      { name: 'Type B Feed', description: 'Monthly CECL provision data' },
+      { name: 'Type C Platform', description: 'CECL modeling platform' },
+      { name: 'Type D Gateway', description: 'External economic data feeds' }
+    ],
+    metadata: {
+      updateFrequency: 'Monthly',
+      dataFormat: 'CSV, JSON, SAS',
+      coverage: 'All credit portfolios',
+      regions: 'United States',
+      startDate: '2020-01-01',
+      lastUpdated: '2024-12-10'
+    },
+    schema: [
+      { name: 'portfolio_segment', type: 'string', description: 'Credit card, mortgage, commercial, etc.' },
+      { name: 'vintage', type: 'string', description: 'Loan origination vintage year-month' },
+      { name: 'probability_of_default', type: 'number', description: 'Lifetime PD estimate' },
+      { name: 'loss_given_default', type: 'number', description: 'LGD assumption percentage' },
+      { name: 'exposure_at_default', type: 'number', description: 'EAD at time of default' },
+      { name: 'current_balance', type: 'number', description: 'Current outstanding balance' },
+      { name: 'lifetime_ecl', type: 'number', description: 'Lifetime expected credit loss' },
+      { name: 'economic_scenario', type: 'string', description: 'Base, Adverse, Optimistic scenario' },
+      { name: 'unemployment_forecast', type: 'number', description: 'Forecasted unemployment rate' },
+      { name: 'gdp_forecast', type: 'number', description: 'GDP growth rate forecast' },
+      { name: 'provision_amount', type: 'number', description: 'CECL provision amount' },
+      { name: 'calculation_date', type: 'date', description: 'CECL calculation date' }
+    ],
+    relatedDatasets: ['Credit Risk Analytics', 'Economic Indicators', 'Portfolio Performance Data'],
+    qnaResponse: 'CECL Credit Loss Modeling Data provides comprehensive credit loss estimation and provisioning data required for CECL accounting compliance, including lifetime loss calculations and economic scenario modeling.'
   }
 ];
 
@@ -313,5 +662,22 @@ export const searchDatasets = (query) => {
     dataset.description.toLowerCase().includes(searchTerm) ||
     dataset.category.toLowerCase().includes(searchTerm) ||
     dataset.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+  );
+};
+
+// Regulatory-specific helper functions
+export const getRegulatoryDatasets = () => {
+  return mockDatasets.filter(dataset => dataset.category === 'Regulatory Reporting');
+};
+
+export const getDatasetsByRegulation = (regulation) => {
+  return mockDatasets.filter(dataset => 
+    dataset.tags.some(tag => tag.toLowerCase().includes(regulation.toLowerCase()))
+  );
+};
+
+export const getStressTestingDatasets = () => {
+  return mockDatasets.filter(dataset => 
+    dataset.tags.some(tag => ['CCAR', 'DFAST', 'Stress Testing'].includes(tag))
   );
 };

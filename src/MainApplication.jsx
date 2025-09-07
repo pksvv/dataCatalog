@@ -144,10 +144,10 @@ const MainApplication = () => {
     switch(activePage) {
       case 'discovery':
         return renderDiscoveryContent();
-      case 'catalog2':
-        return <DataCatalog />;
-      case 'catalog':
-        return <DataCatalogInterface />;
+      //case 'catalog2':
+      //  return <DataCatalog />;
+      //case 'catalog':
+      //  return <DataCatalogInterface />;
         // inside renderContent() switch
       case 'traditional':
         return (
@@ -160,8 +160,8 @@ const MainApplication = () => {
             }}
           />
         );
-      case 'genai':
-        return <GenAIInterface />;
+      // case 'genai':
+      //  return <GenAIInterface />;
       case 'create-product':
         return <CreateDataProduct />;
       case 'contract-hub':
@@ -181,13 +181,22 @@ const MainApplication = () => {
     { id: 'home', label: 'Home', icon: <Layout className="h-5 w-5" /> },
     { id: 'info', label: 'Learning Resources', icon: <Volume2 className="h-5 w-5" /> },
     { id: 'discovery', label: 'Discovery Flow', icon: <Search className="h-5 w-5" /> },
+    { id: 'contract-hub', label: 'Data Contract Hub', icon: <Target className="h-5 w-5" /> },
+    { id: 'architecture', label: 'Architecture', icon: <Info className="h-5 w-5" /> }
+  ];
+  
+/*   // Navigation items - Updated to include Discovery Flow
+  const navItems = [
+    { id: 'home', label: 'Home', icon: <Layout className="h-5 w-5" /> },
+    { id: 'info', label: 'Learning Resources', icon: <Volume2 className="h-5 w-5" /> },
+    { id: 'discovery', label: 'Discovery Flow', icon: <Search className="h-5 w-5" /> },
     { id: 'catalog2', label: 'Data Discoverability', icon: <Book className="h-5 w-5" /> },
     { id: 'contract-hub', label: 'Data Contract Hub', icon: <Target className="h-5 w-5" /> },
     { id: 'traditional', label: 'Select Data Product', icon: <FileText className="h-5 w-5" /> },
     { id: 'genai', label: 'GenAI Flow', icon: <Sparkles className="h-5 w-5" /> },
     { id: 'architecture', label: 'Architecture', icon: <Info className="h-5 w-5" /> }
-  ];
-  
+  ]; */
+
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
