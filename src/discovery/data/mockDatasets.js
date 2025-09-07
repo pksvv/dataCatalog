@@ -665,19 +665,94 @@ export const searchDatasets = (query) => {
   );
 };
 
-// Regulatory-specific helper functions
-export const getRegulatoryDatasets = () => {
-  return mockDatasets.filter(dataset => dataset.category === 'Regulatory Reporting');
+// Helper functions for intelligent query mapping
+export const mapQueryToDatasets = (query) => {
+  const queryLower = query.toLowerCase();
+  const results = searchDatasets(query);
+  
+  // Enhanced query mapping patterns
+  const queryPatterns = {
+    // Regulatory patterns
+    'stress testing|ccar|capital planning|adverse scenario': ['ds-011', 'ds-010', 'ds-012'],
+    'basel|capital adequacy|tier 1|rwa|leverage ratio': ['ds-012', 'ds-015', 'ds-011'],
+    'call report|ffiec|quarterly filing|bank financials': ['ds-013', 'ds-014'],
+    'aml|anti money laundering|bsa|suspicious activity|transaction monitoring': ['ds-016'],
+    'y9c|bank holding company|bhc|consolidated reports': ['ds-014', 'ds-013'],
+    'cecl|credit loss|lifetime losses|provisioning': ['ds-017', 'ds-006'],
+    'liquidity|lcr|coverage ratio|liquid assets': ['ds-015', 'ds-012'],
+    
+    // Market intelligence patterns
+    'financial estimates|analyst|consensus|earnings': ['ds-001', 'ds-002'],
+    'market data|demographics|economic indicators': ['ds-003', 'ds-007'],
+    'derivatives|otc|trading|counterparty risk': ['ds-004', 'ds-006'],
+    'esg|sustainability|environmental|governance': ['ds-005'],
+    'credit risk|probability default|risk analytics': ['ds-006', 'ds-017'],
+    'commodity|pricing|energy|metals|agriculture': ['ds-007'],
+    'alternative data|satellite|sentiment|geolocation': ['ds-008']
+  };
+
+  // Find matching datasets by patterns
+  let matchedDatasets = results;
+  
+  for (const [pattern, datasetIds] of Object.entries(queryPatterns)) {
+    const regex = new RegExp(pattern, 'i');
+    if (regex.test(queryLower)) {
+      const patternDatasets = datasetIds.map(id => getDatasetById(id)).filter(Boolean);
+      if (patternDatasets.length > 0) {
+        matchedDatasets = [...patternDatasets, ...results.filter(r => !datasetIds.includes(r.id))];
+        break;
+      }
+    }
+  }
+
+  return matchedDatasets;
 };
 
-export const getDatasetsByRegulation = (regulation) => {
-  return mockDatasets.filter(dataset => 
-    dataset.tags.some(tag => tag.toLowerCase().includes(regulation.toLowerCase()))
-  );
-};
-
-export const getStressTestingDatasets = () => {
-  return mockDatasets.filter(dataset => 
-    dataset.tags.some(tag => ['CCAR', 'DFAST', 'Stress Testing'].includes(tag))
-  );
+export const generateIntelligentResponse = (query, datasets) => {
+  const queryLower = query.toLowerCase();
+  
+  // Use qnaResponse from matching datasets
+  const primaryDataset = datasets[0];
+  let baseResponse = primaryDataset?.qnaResponse || "I found relevant datasets for your query.";
+  
+  // Enhanced response based on query type
+  if (queryLower.includes('stress test') || queryLower.includes('ccar')) {
+    return {
+      summary: baseResponse + " CCAR stress testing requires comprehensive data covering baseline, adverse, and severely adverse economic scenarios for capital planning and regulatory submissions.",
+      recommendations: datasets.slice(0, 3).map(d => `${d.title}: ${d.qnaResponse || d.description.substring(0, 100)}...`),
+      relatedConcepts: ["DFAST", "Capital Planning", "Fed Submissions", "Stress Scenarios"],
+      context: "Large banks must demonstrate capital adequacy under stress conditions through annual CCAR assessments.",
+      compliance: ["Annual submission to Federal Reserve", "9-quarter projection period", "Capital actions plan required"]
+    };
+  }
+  
+  if (queryLower.includes('basel') || queryLower.includes('capital')) {
+    return {
+      summary: baseResponse + " Basel III framework establishes international standards for bank capital adequacy, stress testing, and market liquidity risk.",
+      recommendations: datasets.slice(0, 3).map(d => `${d.title}: ${d.qnaResponse || d.description.substring(0, 100)}...`),
+      relatedConcepts: ["CET1 Ratio", "Risk-Weighted Assets", "Capital Conservation Buffer", "Leverage Ratio"],
+      context: "Basel III standards ensure banks maintain adequate capital buffers to absorb losses during financial stress.",
+      compliance: ["Minimum CET1 ratio: 4.5%", "Capital conservation buffer: 2.5%", "Phased implementation complete"]
+    };
+  }
+  
+  if (queryLower.includes('aml') || queryLower.includes('money laundering')) {
+    return {
+      summary: baseResponse + " Anti-Money Laundering compliance requires robust transaction monitoring, customer due diligence, and regulatory reporting.",
+      recommendations: datasets.slice(0, 3).map(d => `${d.title}: ${d.qnaResponse || d.description.substring(0, 100)}...`),
+      relatedConcepts: ["Transaction Monitoring", "SAR Filing", "Customer Due Diligence", "OFAC Screening"],
+      context: "Financial institutions must maintain comprehensive AML programs to detect and report suspicious activities.",
+      compliance: ["SAR filing within 30 days", "CTR for transactions $10K+", "Customer identification required"]
+    };
+  }
+  
+  // Default intelligent response using dataset qnaResponse
+  return {
+    summary: baseResponse + (datasets.length > 1 ? ` I found ${datasets.length} relevant datasets across multiple categories.` : ""),
+    recommendations: datasets.slice(0, 3).map(d => `${d.title}: ${d.qnaResponse || d.description.substring(0, 100)}...`),
+    relatedConcepts: [...new Set(datasets.flatMap(d => d.tags))].slice(0, 6),
+    context: "Data-driven insights require comprehensive, accurate, and timely information across multiple domains.",
+    compliance: datasets.filter(d => d.category === 'Regulatory Reporting').length > 0 ? 
+      ["Regulatory compliance varies by jurisdiction", "Consult with compliance teams", "Regular updates required"] : []
+  };
 };
