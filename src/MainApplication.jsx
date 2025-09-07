@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Book, FileText, Search, Layout, Database, Sparkles, Users, Settings, Menu, X, Info, ExternalLink, Volume2, Code, Target } from 'lucide-react';
+import { Book, FileText, Search, Layout, Database, Sparkles, Users, Settings, Menu, X, Info, ExternalLink, Volume2, Target } from 'lucide-react';
 import DataCatalogInterface from './DataCatalogInterface';
 import DataCatalog from './DataCatalog';
-import TraditionalContractFlow from './TraditionalContractFlow';
+import TraditionalContractFlow from './TraditionalContractFlow.jsx';
 import GenAIInterface from './GenAIInterface';
 import InteractiveArchitecture from './InteractiveArchitecture';
 import DataProductInfo from './DataProductInfo';
 import ContractHub from './ContractHub';
 import CreateDataProduct from './CreateDataProduct';
+
+// Import new Discovery Flow components
+import DiscoveryLanding from './discovery/DiscoveryLanding';
+import SearchResults from './discovery/SearchResults';
+import DatasetDetail from './discovery/DatasetDetail';
+import { searchDatasets } from './discovery/data/mockDatasets';
 
 const MainApplication = () => {
   // State for controlling sidebar expansion
@@ -16,26 +22,144 @@ const MainApplication = () => {
   // State for active component/page
   const [activePage, setActivePage] = useState('home');
 
+  // Discovery Flow state
+  const [discoveryState, setDiscoveryState] = useState({
+    currentPage: 'landing', // 'landing', 'search', 'detail'
+    searchQuery: '',
+    searchResults: [],
+    selectedDatasetId: null,
+    cameFromSearch: false,
+  });
+
+  // Contract creation state - stores dataset info for pre-filling contracts
+  const [contractContext, setContractContext] = useState(null);
+
   // Update document title when component mounts or page changes
   useEffect(() => {
     document.title = 'Data Marketplace';
   }, [activePage]);
 
-  
   // Helper function to toggle sidebar
   const toggleSidebar = () => {
     setSidebarExpanded(!sidebarExpanded);
+  };
+
+  // Discovery Flow handlers
+  const handleSearch = (query) => {
+    const results = searchDatasets(query);
+    setDiscoveryState({
+      currentPage: 'search',
+      searchQuery: query,
+      searchResults: results,
+      selectedDatasetId: null,
+      cameFromSearch: false,
+    });
+  };
+
+  const handleDatasetSelect = (dataset) => {
+    setDiscoveryState((prev) => ({
+      ...prev,
+      currentPage: 'detail',
+      selectedDatasetId: dataset.id,
+      cameFromSearch: prev.currentPage === 'search',
+    }));
+  };
+
+  const handleBackToDiscoveryHome = () => {
+    setDiscoveryState({
+      currentPage: 'landing',
+      searchQuery: '',
+      searchResults: [],
+      selectedDatasetId: null,
+      cameFromSearch: false,
+    });
+  };
+
+  const handleBackToSearchResults = () => {
+    setDiscoveryState((prev) => ({
+      ...prev,
+      currentPage: prev.cameFromSearch ? 'search' : 'landing',
+      selectedDatasetId: null,
+    }));
+  };
+
+  // Contract creation handler - stores dataset info and navigates to contract flow
+  const handleCreateContract = (contractInfo) => {
+    // Store the dataset and delivery information for contract pre-filling
+    setContractContext({
+      dataset: contractInfo?.dataset || contractInfo,
+      deliveryType: contractInfo?.deliveryType || 'General',
+      sourceFlow: 'discovery',
+      timestamp: new Date().toISOString(),
+    });
+    // Navigate to traditional contract flow
+    setActivePage('traditional');
+  };
+
+  // Render Discovery Flow content based on current page
+  const renderDiscoveryContent = () => {
+    switch (discoveryState.currentPage) {
+      case 'landing':
+        return (
+          <DiscoveryLanding
+            onSearch={handleSearch}
+            onDatasetSelect={handleDatasetSelect}
+            onCreateContract={handleCreateContract}
+          />
+        );
+      case 'search':
+        return (
+          <SearchResults
+            searchQuery={discoveryState.searchQuery}
+            results={discoveryState.searchResults}
+            onDatasetSelect={handleDatasetSelect}
+            onBackToHome={handleBackToDiscoveryHome}
+            onSearch={handleSearch}
+            onCreateContract={handleCreateContract}
+          />
+        );
+      case 'detail':
+        return (
+          <DatasetDetail
+            datasetId={discoveryState.selectedDatasetId}
+            onBack={handleBackToSearchResults}
+            onDatasetSelect={handleDatasetSelect}
+            cameFromSearch={discoveryState.cameFromSearch}
+            onCreateContract={handleCreateContract}
+          />
+        );
+      default:
+        return (
+          <DiscoveryLanding 
+            onSearch={handleSearch} 
+            onDatasetSelect={handleDatasetSelect}
+            onCreateContract={handleCreateContract}
+          />
+        );
+    }
   };
   
   // Render the appropriate content based on active page
   const renderContent = () => {
     switch(activePage) {
+      case 'discovery':
+        return renderDiscoveryContent();
       case 'catalog2':
         return <DataCatalog />;
       case 'catalog':
         return <DataCatalogInterface />;
+        // inside renderContent() switch
       case 'traditional':
-        return <TraditionalContractFlow />;
+        return (
+          <TraditionalContractFlow
+            contractContext={contractContext}
+            onClearContext={() => setContractContext(null)}
+            onCreateAnother={() => {
+              setContractContext(null);
+              setActivePage('discovery');   // ← go to Discovery Flow
+            }}
+          />
+        );
       case 'genai':
         return <GenAIInterface />;
       case 'create-product':
@@ -52,10 +176,11 @@ const MainApplication = () => {
     }
   };
   
-  // Navigation items - Updated to remove Create Data Product and rename Traditional Flow
+  // Navigation items - Updated to include Discovery Flow
   const navItems = [
     { id: 'home', label: 'Home', icon: <Layout className="h-5 w-5" /> },
     { id: 'info', label: 'Learning Resources', icon: <Volume2 className="h-5 w-5" /> },
+    { id: 'discovery', label: 'Discovery Flow', icon: <Search className="h-5 w-5" /> },
     { id: 'catalog2', label: 'Data Discoverability', icon: <Book className="h-5 w-5" /> },
     { id: 'contract-hub', label: 'Data Contract Hub', icon: <Target className="h-5 w-5" /> },
     { id: 'traditional', label: 'Select Data Product', icon: <FileText className="h-5 w-5" /> },
@@ -91,7 +216,17 @@ const MainApplication = () => {
               <li key={item.id}>
                 <button
                   className={`w-full flex items-center px-4 py-3 hover:bg-indigo-800 transition-colors ${activePage === item.id ? 'bg-indigo-800' : ''}`}
-                  onClick={() => setActivePage(item.id)}
+                  onClick={() => {
+                    setActivePage(item.id);
+                    // Reset discovery state when switching to discovery section
+                    if (item.id === 'discovery') {
+                      handleBackToDiscoveryHome();
+                    }
+                    // Clear contract context when leaving traditional flow
+                    if (item.id !== 'traditional' && contractContext) {
+                      setContractContext(null);
+                    }
+                  }}
                 >
                   <div className={`${sidebarExpanded ? 'mr-4' : 'mx-auto'}`}>
                     {item.icon}
@@ -134,6 +269,11 @@ const MainApplication = () => {
           <div className="flex items-center justify-between px-6 py-4">
             <div className="flex items-center">
               <h1 className="text-xl font-semibold text-gray-800">{navItems.find(item => item.id === activePage)?.label || 'Home'}</h1>
+              {contractContext && activePage === 'traditional' && (
+                <span className="ml-3 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                  Pre-filled from: {contractContext.dataset.title}
+                </span>
+              )}
             </div>
             <div className="flex items-center space-x-4">
               <div className="relative">
@@ -160,7 +300,7 @@ const MainApplication = () => {
   );
 };
 
-// Updated Home page component with removed "Start Creating Data Contracts" section
+// Updated Home page component with Discovery Flow mention
 const HomePage = ({ setActivePage }) => {
   return (
     <div className="max-w-7xl mx-auto">
@@ -259,22 +399,26 @@ const HomePage = ({ setActivePage }) => {
                     <text x="450" y="165" textAnchor="middle" fill="#0c4a6e" fontSize="14">Data Product Platform</text>
                     
                     {/* Approaches */}
-                    <rect x="220" y="210" width="160" height="60" rx="5" fill="#c7d2fe" stroke="#4338ca" strokeWidth="1" />
-                    <text x="300" y="245" textAnchor="middle" fill="#312e81" fontSize="12">Select Data Product</text>
+                    <rect x="150" y="210" width="140" height="60" rx="5" fill="#c7d2fe" stroke="#4338ca" strokeWidth="1" />
+                    <text x="220" y="245" textAnchor="middle" fill="#312e81" fontSize="12">Discovery Flow</text>
                     
-                    <rect x="520" y="210" width="160" height="60" rx="5" fill="#f3e8ff" stroke="#9333ea" strokeWidth="1" />
-                    <text x="600" y="245" textAnchor="middle" fill="#6b21a8" fontSize="12">GenAI Approach</text>
+                    <rect x="320" y="210" width="140" height="60" rx="5" fill="#c7d2fe" stroke="#4338ca" strokeWidth="1" />
+                    <text x="390" y="245" textAnchor="middle" fill="#312e81" fontSize="12">Select Data Product</text>
+                    
+                    <rect x="490" y="210" width="140" height="60" rx="5" fill="#f3e8ff" stroke="#9333ea" strokeWidth="1" />
+                    <text x="560" y="245" textAnchor="middle" fill="#6b21a8" fontSize="12">GenAI Approach</text>
                     
                     {/* Connecting Lines */}
-                    <line x1="300" y1="190" x2="300" y2="210" stroke="#4338ca" strokeWidth="2" />
-                    <line x1="600" y1="190" x2="600" y2="210" stroke="#9333ea" strokeWidth="2" />
+                    <line x1="220" y1="190" x2="220" y2="210" stroke="#4338ca" strokeWidth="2" />
+                    <line x1="390" y1="190" x2="390" y2="210" stroke="#4338ca" strokeWidth="2" />
+                    <line x1="560" y1="190" x2="560" y2="210" stroke="#9333ea" strokeWidth="2" />
                     
                     <line x1="450" y1="110" x2="450" y2="130" stroke="#94a3b8" strokeWidth="2" />
                   </svg>
                 </div>
                 <div className="mt-4 text-sm text-gray-500">
-                  <p>The diagram above shows how the data product selection approach and GenAI natural language approach 
-                  both fit into the overall data product architecture. All approaches leverage the same underlying data governance, 
+                  <p>The diagram above shows how the Discovery Flow, data product selection approach and GenAI natural language approach 
+                  all fit into the overall data product architecture. All approaches leverage the same underlying data governance, 
                   quality control, and delivery mechanisms.</p>
                   <button 
                     className="mt-2 flex items-center text-blue-600 font-medium hover:text-blue-800"
@@ -293,7 +437,7 @@ const HomePage = ({ setActivePage }) => {
       <div className="bg-white shadow-sm rounded-lg p-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-4">Key Demo Features</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
           <div className="border border-gray-200 rounded-lg p-6">
             <div className="flex items-center mb-4">
               <div className="bg-purple-100 rounded-full p-2 mr-3">
@@ -309,6 +453,24 @@ const HomePage = ({ setActivePage }) => {
               onClick={() => setActivePage('info')}
             >
               Listen Now
+            </button>
+          </div>
+
+          <div className="border border-gray-200 rounded-lg p-6">
+            <div className="flex items-center mb-4">
+              <div className="bg-blue-100 rounded-full p-2 mr-3">
+                <Search className="h-6 w-6 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900">Discovery Flow</h3>
+            </div>
+            <p className="text-gray-600">
+              Experience dataset discovery with GenAI search, trending sections, and detailed dataset views.
+            </p>
+            <button 
+              className="mt-4 text-blue-600 font-medium hover:text-blue-800"
+              onClick={() => setActivePage('discovery')}
+            >
+              Try Discovery
             </button>
           </div>
           
