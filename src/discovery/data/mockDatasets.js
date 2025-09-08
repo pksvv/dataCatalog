@@ -21,7 +21,8 @@ export const mockDatasets = [
       coverage: '17,000+ companies',
       regions: 'Global',
       startDate: '2015-01-01',
-      lastUpdated: '2024-12-15'
+      lastUpdated: '2024-12-15',
+      retentionPolicy: '7 years'
     },
     schema: [
       { name: 'company_id', type: 'string', description: 'Unique company identifier' },
@@ -59,7 +60,8 @@ export const mockDatasets = [
       coverage: '15,000+ entities',
       regions: 'Global',
       startDate: '2010-01-01',
-      lastUpdated: '2024-12-14'
+      lastUpdated: '2024-12-14',
+      retentionPolicy: '5 years'
     },
     schema: [
       { name: 'entity_id', type: 'string', description: 'Unique entity identifier' },
@@ -97,7 +99,8 @@ export const mockDatasets = [
       coverage: '200+ countries',
       regions: 'Global',
       startDate: '2005-01-01',
-      lastUpdated: '2024-11-30'
+      lastUpdated: '2024-11-30',
+      retentionPolicy: '12 years'
     },
     schema: [
       { name: 'region_id', type: 'string', description: 'Geographic region identifier' },
@@ -132,7 +135,8 @@ export const mockDatasets = [
       coverage: 'Major OTC markets',
       regions: 'Americas, Europe, Asia',
       startDate: '2018-01-01',
-      lastUpdated: '2024-12-15'
+      lastUpdated: '2024-12-15',
+      retentionPolicy: '10 years'
     },
     schema: [
       { name: 'trade_id', type: 'string', description: 'Unique trade identifier' },
@@ -168,7 +172,8 @@ export const mockDatasets = [
       coverage: '8,000+ companies',
       regions: 'Global',
       startDate: '2017-01-01',
-      lastUpdated: '2024-12-10'
+      lastUpdated: '2024-12-10',
+      retentionPolicy: '15 years'
     },
     schema: [
       { name: 'company_id', type: 'string', description: 'Company identifier' },
@@ -204,7 +209,8 @@ export const mockDatasets = [
       coverage: '25,000+ entities',
       regions: 'Global',
       startDate: '2012-01-01',
-      lastUpdated: '2024-12-13'
+      lastUpdated: '2024-12-13',
+      retentionPolicy: '20 years'
     },
     schema: [
       { name: 'entity_id', type: 'string', description: 'Entity identifier' },
@@ -241,7 +247,8 @@ export const mockDatasets = [
       coverage: '500+ commodities',
       regions: 'Global',
       startDate: '2008-01-01',
-      lastUpdated: '2024-12-15'
+      lastUpdated: '2024-12-15',
+      retentionPolicy: '5 years'
     },
     schema: [
       { name: 'commodity_id', type: 'string', description: 'Commodity identifier' },
@@ -277,7 +284,8 @@ export const mockDatasets = [
       coverage: '20+ data sources',
       regions: 'Global',
       startDate: '2019-01-01',
-      lastUpdated: '2024-12-15'
+      lastUpdated: '2024-12-15',
+      retentionPolicy: '16 years'
     },
     schema: [
       { name: 'signal_id', type: 'string', description: 'Signal identifier' },
@@ -315,7 +323,8 @@ export const mockDatasets = [
       coverage: 'All regulated entities',
       regions: 'United States',
       startDate: '2018-01-01',
-      lastUpdated: '2024-12-15'
+      lastUpdated: '2024-12-15',
+      retentionPolicy: '20 years'
     },
     schema: [
       { name: 'prim_rc_ds', type: 'string', description: 'Description of Primary Responsibility Center' },
@@ -352,7 +361,8 @@ export const mockDatasets = [
       coverage: 'Card member portfolio',
       regions: 'United States',
       startDate: '2016-01-01',
-      lastUpdated: '2024-12-14'
+      lastUpdated: '2024-12-14',
+      retentionPolicy: '30 years'
     },
     schema: [
       { name: 'card_portfo', type: 'string', description: 'Portfolio classification for regulatory segmentation' },
@@ -389,7 +399,8 @@ export const mockDatasets = [
       coverage: 'Large Bank Holding Companies',
       regions: 'United States',
       startDate: '2013-01-01',
-      lastUpdated: '2024-12-10'
+      lastUpdated: '2024-12-10',
+      retentionPolicy: '15 years'
     },
     schema: [
       { name: 'institution_id', type: 'string', description: 'Bank holding company identifier' },
@@ -428,7 +439,8 @@ export const mockDatasets = [
       coverage: 'Global systemically important banks',
       regions: 'Global',
       startDate: '2014-01-01',
-      lastUpdated: '2024-12-13'
+      lastUpdated: '2024-12-13',
+      retentionPolicy: '20 years'
     },
     schema: [
       { name: 'bank_id', type: 'string', description: 'Bank identifier for regulatory reporting' },
@@ -468,7 +480,8 @@ export const mockDatasets = [
       coverage: '4,800+ US banks',
       regions: 'United States',
       startDate: '2001-01-01',
-      lastUpdated: '2024-09-30'
+      lastUpdated: '2024-09-30',
+      retentionPolicy: '12 years'
     },
     schema: [
       { name: 'fdic_cert_id', type: 'string', description: 'FDIC Certificate Number' },
@@ -507,7 +520,8 @@ export const mockDatasets = [
       coverage: '250+ large BHCs',
       regions: 'United States',
       startDate: '1986-01-01',
-      lastUpdated: '2024-09-30'
+      lastUpdated: '2024-09-30',
+      retentionPolicy: '12 years'
     },
     schema: [
       { name: 'rssd_id', type: 'string', description: 'Federal Reserve RSSD identifier' },
@@ -546,7 +560,8 @@ export const mockDatasets = [
       coverage: 'Large banks and BHCs',
       regions: 'Global',
       startDate: '2015-01-01',
-      lastUpdated: '2024-12-14'
+      lastUpdated: '2024-12-14',
+      retentionPolicy: '25 years'
     },
     schema: [
       { name: 'institution_id', type: 'string', description: 'Bank identifier for LCR reporting' },
@@ -585,7 +600,8 @@ export const mockDatasets = [
       coverage: 'All regulated financial institutions',
       regions: 'United States',
       startDate: '2010-01-01',
-      lastUpdated: '2024-12-15'
+      lastUpdated: '2024-12-15',
+      retentionPolicy: '15 years'
     },
     schema: [
       { name: 'transaction_id', type: 'string', description: 'Unique transaction identifier' },
@@ -624,7 +640,11 @@ export const mockDatasets = [
       coverage: 'All credit portfolios',
       regions: 'United States',
       startDate: '2020-01-01',
-      lastUpdated: '2024-12-10'
+      lastUpdated: '2024-12-10',
+      retentionPolicy: '7 years',
+      dataClassification: 'Confidential',
+      piiData: false,
+      regulatoryRequirements: ['CECL', 'GAAP', 'FASB', 'Credit Loss Accounting']
     },
     schema: [
       { name: 'portfolio_segment', type: 'string', description: 'Credit card, mortgage, commercial, etc.' },
